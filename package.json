@@ -1,0 +1,22 @@
+{
+  "name": "javascript-code-lab",
+  "version": "1.0.0",
+  "description": "Store my code to explore the javascript mystery.",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "javascript",
+    "tricks",
+    "tutorial",
+    "code",
+    "mystery"
+  ],
+  "author": "YuTengjing",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^5.16.0"
+  }
+}
