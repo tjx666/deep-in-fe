@@ -44,7 +44,7 @@ class MyEventEmitter {
         if (!eventName) {
             this.listeners = {};
         } else {
-            this.listeners[eventName] = null;
+            this.listeners[eventName] = undefined;
         }
     }
 
@@ -75,6 +75,7 @@ class MyEventEmitter {
         }
     }
 }
+
 
 MyEventEmitter.defaultMaxListeners = 10;
 module.exports = MyEventEmitter;

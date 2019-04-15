@@ -73,8 +73,10 @@ class MyPromise {
         this.status = Status.PENDING;
         this.value = null;
         this.reason = null;
-        this.onFulfilledCallback = () => {};
-        this.onRejectedCallback = () => {};
+        this.onFulfilledCallback = value => value;
+        this.onRejectedCallback = (reason) => {
+            console.warn(`UnhandledPromiseRejectionWarning: ${JSON.stringify(reason)}`);
+        }
 
         const resolve = (value) => {
             setTimeout(() => {
