@@ -1,5 +1,5 @@
-const MyEventEmitter = require('../../EventEmitter/MyEventEmitter');
 const assert = require('assert');
+const MyEventEmitter = require('../../src/EventEmitter/MyEventEmitter');
 
 describe('#MyEventEmitter', () => {
     let db;
