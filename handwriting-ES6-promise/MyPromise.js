@@ -60,6 +60,7 @@ class MyPromise {
 
     static race(promiseArray) {
         let errArray = [];
+
         return new MyPromise((resolve, reject) => {
             promiseArray.forEach(promise => promise.then(resolve, err => {
                 errArray.push(err);
@@ -163,12 +164,9 @@ class MyPromise {
             onFinally();
         }, (reason) => {
             onFinally();
-            throw (reason);
+            throw reason;
         })
     }
 }
 
-if (require.main === module) {
-} else {
-    module.exports = MyPromise;
-}
+module.exports = MyPromise;
