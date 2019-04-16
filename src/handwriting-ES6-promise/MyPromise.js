@@ -7,9 +7,9 @@ const Status = {
 class MyPromise {
     static resolvePromise(promise2, x, resolve, reject) {
         if (promise2 === x) throw new TypeError('Chaining cycle detected for promise #<Promise></Promise>');
-        const isObjOrFunc = x !== null && (Object.prototype.toString.call(x) === '[object Object]' || Object.prototype.toString.call(x) === '[object Function]');
+        const isObject = x !== null && (Object.prototype.toString.call(x) === '[object Object]' || Object.prototype.toString.call(x) === '[object Function]');
 
-        if (isObjOrFunc) {
+        if (isObject) {
             const then = x.then;
             if (typeof then === 'function') {
                 if (x.__called__) return;
