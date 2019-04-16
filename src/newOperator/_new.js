@@ -6,3 +6,4 @@ const _new = (fn, ...args) => {
 }
 
 module.exports = _new;
+

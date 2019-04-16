@@ -1,7 +1,7 @@
 const assert = require('assert');
-const instance_of = require('../../src/typeCheck/instanceOf');
+const instance_of = require('../../src/typeCheck/instanceOf1');
 
-describe('#testInstanceof', () => {
+describe('#testInstanceOf1', () => {
     class Father {}
     class Son extends Father {}
     const son = new Son();
