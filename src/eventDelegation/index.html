@@ -6,10 +6,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        #root {
+            width: fit-content;
+            margin: 100px auto;
+        }
+
+        #expression {
+            padding: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: darkblue
+        }
+
+        td {
+            padding: 5px 10px;
+        }
+
+        td:hover {
+            color: darkblue;
+            box-shadow: 1px 3px 8px lightslategray;
+            cursor: pointer;
+            background-color: beige;
+            transition: transform 0.15s linear;
+            transform: scale(1.2, 1.2);
+        }
+    </style>
 </head>
 
 <body>
-    
+    <div id="root">
+        <div id="expression">0 ✖ 0 = 0</div>
+        <table id="multiplication-table" border="5"></table>
+    </div>
 </body>
+<script src="./eventDelegate.js"></script>
+<script>
+    ! function (window) {
+        window.onload = () => {
+            const tableSelector = '#multiplication-table';
+            const table = document.querySelector(tableSelector);
+            let tableInnerHtml = '';
+
+            for (let i = 0; i < 9; i++) {
+                const tr = document.createElement('tr');
+                for (let j = 0; j < i + 1; j++) {
+                    const td = document.createElement('td');
+                    td.innerText = `${i + 1} ✖ ${j + 1}`;
+                    tr.appendChild(td);
+                }
+                tableInnerHtml += tr.outerHTML;
+            }
+
+            table.innerHTML = tableInnerHtml;
+            eventDelegate('#root', 'td', 'click', (event) => {
+                const {
+                    target
+                } = event;
+                const expressText = target.innerText.trim();
+                document.querySelector('#expression').innerText =
+                    `${expressText} = ${expressText[0] * expressText[4]}`;
+            })
+        };
+    }(window);
+</script>
 
 </html>
