@@ -1,5 +1,5 @@
 const assert = require('assert');
-const myExtends = require('../../src/prototypeExtends/prototypeExtends');
+const myExtends = require('../../src/prototypeExtends/myExtends');
 
 describe('#test prototypeExtends', () => {
     function Father(name) {

@@ -13,19 +13,21 @@ class MyPromise {
             const then = x.then;
             if (typeof then === 'function') {
                 if (x.__called__) return;
-
+                x.__called__ = true;
                 try {
                     x.then(y => {
-                        x.__called__ = true;
                         MyPromise.resolvePromise(promise2, y, resolve, reject);
                     }, reason => {
-                        x.__called__ = true;
                         reject(reason);
                     })
                 } catch (reason) {
+                    if (x.__called__) return;
+                    x.__called__ = true;
                     reject(reason);
                 }
             } else {
+                if (x.__called__) return;
+                x.__called__ = true;
                 resolve(x);
             }
         } else {
@@ -160,7 +162,7 @@ class MyPromise {
     catch (onReject) {
         this.then(null, onReject);
     }
-
+    
     finally(onFinally) {
         this.then(() => {
             onFinally();

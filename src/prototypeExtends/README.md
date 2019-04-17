@@ -1,0 +1,1 @@
+参考了：[JS原型链与继承别再被问倒了](https://juejin.im/post/58f94c9bb123db411953691b)
