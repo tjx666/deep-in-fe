@@ -4,9 +4,14 @@ const createStore = (reducer) => {
 
     const subscribe = (listener) => {
         listeners.push(listener);
+
+        let isUnsubscribed = false;
         const unsubscribe = () => {
+            if (isUnsubscribed) return;
+            
             const index = listeners.findIndex(eleListener => eleListener === listener);
             ~index && listeners.splice(index, 1);
+            isUnsubscribed = true;
         }
         return unsubscribe;
     }
