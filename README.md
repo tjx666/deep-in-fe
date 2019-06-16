@@ -11,5 +11,3 @@
 5. 原型继承 √
 6. 事件委托 √
 7. redux √
-8. react hooks fucking
-9. virtual DOM

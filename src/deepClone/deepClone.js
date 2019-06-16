@@ -2,7 +2,6 @@
 const isObj = (obj) => (typeof obj === 'object' && typeof obj !== null) || typeof obj === 'function'; 
 
 const deepClone = (obj, hasTravelMap = new WeakMap()) => {
-    // eslint-disable-next-line valid-typeof
     if (!isObj(obj)) return obj;
     let clonedObj;
     const Constructor = obj.constructor;
