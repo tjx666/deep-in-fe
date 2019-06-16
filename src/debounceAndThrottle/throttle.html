@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>节流</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .end {
+            margin-top: 1600px;
+            text-align: center;
+            font-style: italic;
+            font-weight: bold;
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="end">到底了</div>
+    <script>
+        window.addEventListener('load', () => {
+            const throttle1 = (fn, delay) => {
+                let flag = true;
+                return function () {
+                    if (flag) {
+                        flag = false;
+                        const context = this;
+                        const args = arguments;
+                        setTimeout(() => {
+                            fn.apply(context, args);
+                            flag = true;
+                        }, delay);
+                    }
+                }
+            }
+
+            let times = 0;
+            const handleScroll = () => {
+                const html = document.documentElement;
+                const scrollTop = html.scrollTop;
+                const clientHeight = html.clientHeight;
+                const scrollHeight = html.scrollHeight;
+                times++;
+                console.log({
+                    times,
+                    scrollTop,
+                    clientHeight,
+                    scrollHeight,
+                });
+
+                if (Math.round(scrollTop + clientHeight) === scrollHeight) {
+                    console.log('到底了...');
+                } else {
+                    console.log('没到底...');
+                }
+            }
+
+            const throttle2 = (fn, delay) => {
+                let last = 0;
+                return function() {
+                    const now = Date.now();
+                    const context = this;
+                    const args = arguments;
+                    if (now - last >= delay) {
+                        fn.apply(context, args);
+                        last = now;
+                    }
+                }
+            }
+            
+            window.addEventListener('scroll', throttle2(handleScroll, 200))
+        })
+    </script>
+</body>
+
+</html>

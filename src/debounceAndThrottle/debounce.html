@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>防抖</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .counter {
+            margin: 20px;
+        }
+
+        .info-panel {
+            width: 120px;
+            padding: 20px;
+            margin: 20px;
+            background-color: lightblue;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="counter">
+        <h2 class="result">0</h2>
+        <button class="increase">+ 1</button>
+    </div>
+
+    <div class="info-panel">
+        <h3>可视区域宽: <span class="client-width"></span></h3>
+        <h3>可视区域高: <span class="client-height"></span></h3>
+    </div>
+</body>
+<script>
+    window.addEventListener('load', () => {
+        const debounce = (fn, delay) => {
+            let timer = null;
+            return function () {
+                const context = this;
+                const args = arguments;
+                clearTimeout(timer);
+                timer = setTimeout(() => fn.apply(context, arguments), delay);
+            }
+        }
+
+        let num = 0;
+        const increase = () => {
+            num++;
+            document.querySelector('.result').textContent = num;
+        }
+
+        document.querySelector('.increase').addEventListener('click', debounce(increase, 2000));
+
+        const handleResize = () => {
+            document.querySelector('.client-width').textContent = window.innerWidth;
+            document.querySelector('.client-height').textContent = window.innerHeight;
+        }
+
+        window.addEventListener('resize', debounce(handleResize, 500));
+    })
+</script>
+
+</html>
