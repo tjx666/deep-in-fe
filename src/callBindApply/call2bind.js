@@ -1,14 +1,14 @@
 Function.prototype.myBind = function (thisArg, ...fixedArgs) {
     const func = this;
 
-    const bindFund = function (...others) {
+    const bindFunc = function (...others) {
         const args = [...fixedArgs, ...others];
         if (new.target)  return new func(...args);
         return func.call(thisArg, ...args)
     }
-    bindFund.prototype = func.prototype;
+    bindFunc.prototype = func.prototype;
 
-    return bindFund;
+    return bindFunc;
 }
 
 const displayThisAndArgs = function (...args) {
