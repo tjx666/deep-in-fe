@@ -14,10 +14,6 @@
     },
     "rules": {
         "indent": "off",
-        "linebreak-style": [
-            "error",
-            "windows"
-        ],
         "quotes": "off",
         "semi": "off",
         "no-unused-vars": "off",

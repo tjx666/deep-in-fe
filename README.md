@@ -11,4 +11,9 @@
 5. 原型继承 √
 6. 事件委托 √
 7. redux √
-8. call, apply, bind
+8. call, apply, bind √
+9. 深度克隆 √
+10. map 实现 reduce 和 filter √
+11. 防抖和节流 √
+12. setTimeout 实现 setInterval √
+13. 实现 sleep 函数 √
