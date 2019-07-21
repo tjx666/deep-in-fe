@@ -17,3 +17,5 @@
 11. 防抖和节流 √
 12. setTimeout 实现 setInterval √
 13. 实现 sleep 函数 √
+14. ajax
+    + 原生 ajax √
