@@ -86,6 +86,7 @@
             <em>headers:</em>
             <pre>{{headersText}}</pre>
             <em>body:</em>
+            <span>进度：</span><progress :value="loaded" :max="total"></progress>&nbsp;<span>{{percent}}%</span>
             <pre>{{responseText}}</pre>
         </div>
     </div>
@@ -109,9 +110,15 @@
                 headersText: '',
                 responseText: '',
                 response: {},
-                requestData: [['', '']]
+                requestData: [['', '']],
+                total: 0,
+                loaded: 0,
             },
             computed: {
+                percent() {
+                    const { loaded, total } = this;
+                    return total === 0 ? 0 : Math.trunc(loaded / total * 100);
+                },
             },
             methods: {
                 handleAddKV() {
@@ -125,22 +132,22 @@
                     const { url, method, requestData } = this;
                     // 先构造 XHR 对象
                     const XHR = new XMLHttpRequest();
-                    // UNSENT
-                    console.log('构造完成 XHR 对象后 UNSENT: ', XHR.readyState === XHR.UNSENT); // => 0
 
-                    console.log({ requestData })
+                    // UNSENT
+                    // console.log('构造完成 XHR 对象后 UNSENT: ', XHR.readyState === XHR.UNSENT);
+
                     const data = requestData
                         .filter((keyValue) => `${keyValue[0]}${keyValue[1]}`.trim() !== '')
                         .reduce((previous, current) => {
                             previous[current[0]] = current[1];
                             return previous;
                         }, {});
-                    console.log({ data });
+
                     // open XHR
                     if (method === 'GET') {
                         XHR.open(method, `${url}?${parseData(data)}`);
                         // OPEND
-                        console.log('XHR open 后 OPEND：', XHR.readyState === XHR.OPENED);
+                        // console.log('XHR open 后 OPEND：', XHR.readyState === XHR.OPENED);
                         XHR.send();
                     } else if (method === 'POST') {
                         XHR.open(method, `${url}`);
@@ -153,22 +160,29 @@
                         if (readyState === 2 && readyState === XHR.HEADERS_RECEIVED) {
                             const headersText = XHR.getAllResponseHeaders();
                             this.headersText = headersText;
-                            console.log('已经接受所有响应头：', headersText);
+                            this.total = XHR.getResponseHeader('Content-length');
+                            // console.log('已经接受所有响应头：', headersText);
                         } else if (readyState === 3 && readyState === XHR.LOADING) {
-                            const responseText = XHR.responseText;
+                            const { responseText } = XHR;
                             this.responseText = responseText;
-                            console.log('已经接受部分数据：', responseText);
+                            // console.log('已经接受部分数据：', responseText);
                         } else if (readyState === 4 && readyState === XHR.DONE) {
-                            const responseText = XHR.responseText;
+                            const { responseText } = XHR;
                             this.responseText = responseText;
-                            console.log('接受完成所有响应数据：', responseText)
+                            // console.log('接受完成所有响应数据：', responseText)
                         } else {
                             console.log('不可能发生：', readyState);
                         }
-                    })
+                    });
+
+                    XHR.addEventListener('progress', (event) => {
+                        console.log('触发了 progress 事件')
+                        this.loaded = event.loaded;
+                    });
                 }
             },
         });
+
     </script>
 </body>
 
