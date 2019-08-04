@@ -19,3 +19,4 @@
 13. 实现 sleep 函数 √
 14. ajax
     + 原生 ajax √
+    + jsonp √
