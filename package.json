@@ -5,7 +5,8 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "test": "mocha --require intelli-espower-loader"
+    "test": "mocha --require intelli-espower-loader",
+    "cov": "istanbul cover ./node_modules/mocha/bin/_mocha && npx codeccov"
   },
   "keywords": [
     "javascript",
@@ -19,9 +20,11 @@
   "devDependencies": {
     "eslint": "^5.16.0",
     "intelli-espower-loader": "^1.0.1",
+    "istanbul": "^0.4.5",
     "mocha": "^6.1.3",
     "power-assert": "^1.6.1"
   },
   "dependencies": {
+    "codecov": "^3.5.0"
   }
 }

@@ -1,5 +1,8 @@
 ## 探索 javascript 的奥秘
 
+[![Build Status](https://travis-ci.org/tjx666/javascript-code-lab.svg?branch=master)](https://travis-ci.org/tjx666/javascript-code-lab)
+[![codecov](https://codecov.io/gh/tjx666/javascript-code-lab/branch/master/graph/badge.svg)](https://codecov.io/gh/tjx666/javascript-code-lab)
+
 所有的代码都是我参考了大量资料后总结优化后写下的代码。
 目前没有写详细的注释，后续我应该会一个知识点或者多个知识点写一篇博客，到时候再加上一些详细的注释。
 

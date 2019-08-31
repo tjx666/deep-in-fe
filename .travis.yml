@@ -1,0 +1,22 @@
+sudo: false
+
+os:
+    - linux
+    - osx
+
+language: node_js
+
+node_js:
+    - "10"
+
+cache:
+    yarn: true
+    directories:
+        - node_modules
+
+install:
+    - yarn --frozen-lockfile --non-interactive
+
+script:
+    - npm test
+    - npx codecov
