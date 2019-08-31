@@ -25,3 +25,4 @@
     + jsonp √
 15. 处理服务器返回 null
     + 手写 lodash get √
+    + 使用 proxy 设计一个工具方法: makeSafe

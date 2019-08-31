@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --require intelli-espower-loader",
-    "cov": "istanbul cover ./node_modules/mocha/bin/_mocha && npx codeccov"
+    "cov": "istanbul cover ./node_modules/mocha/bin/_mocha && npx codecov"
   },
   "keywords": [
     "javascript",
