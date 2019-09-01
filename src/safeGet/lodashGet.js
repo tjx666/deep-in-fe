@@ -7,7 +7,7 @@
 const get = (object, path, defaultValue) => {
     if (!Array.isArray(path) && typeof path !== 'string')
         throw new TypeError(`path must be array or string, but you pass the type ${typeof path}`);
-        
+
     // object 的类型如果是 null 或者 undefined 直接返回 default value
     if (object == null) return defaultValue;
 
@@ -29,7 +29,7 @@ const get = (object, path, defaultValue) => {
         object = object[property];
     }
 
-    return index && index === length ? object : defaultValue;
+    return index && index === length && object !== undefined ? object : defaultValue;
 };
 
 module.exports = get;
