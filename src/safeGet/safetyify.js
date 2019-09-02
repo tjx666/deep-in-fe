@@ -34,6 +34,3 @@ const safetyify = (nullableObject) => {
 };
 
 module.exports = safetyify;
-// const testObj = { father: { son: { name: 'lily' } }, nul: null, und: undefined };
-// const safeObj = safetyify(testObj);
-// console.log(safeObj.father.get());

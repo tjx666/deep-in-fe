@@ -25,4 +25,4 @@
     + jsonp √
 15. 处理服务器返回 null
     + lodash get √
-    + 基于 proxy 的 safetify
+    + 基于 proxy 的 safetyify √

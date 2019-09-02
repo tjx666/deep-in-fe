@@ -85,3 +85,8 @@ typings/
 
 yarn.lock
 package-lock.json
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
