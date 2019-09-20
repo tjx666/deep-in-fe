@@ -17,5 +17,6 @@ install:
     - yarn --frozen-lockfile --non-interactive
 
 script:
+    - npm run lint
     - npm test
     - npm run cov

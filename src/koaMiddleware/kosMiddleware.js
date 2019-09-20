@@ -13,7 +13,7 @@ class Koa {
             ++index < this.middlewares.length && (await this.middlewares[index](next));
         };
 
-        !(async () => {
+        (async function() {
             index < this.middlewares.length && (await this.middlewares[index](next));
         })();
     }

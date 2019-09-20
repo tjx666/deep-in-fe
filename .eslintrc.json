@@ -13,11 +13,9 @@
         "ecmaVersion": 2018
     },
     "rules": {
-        "indent": "off",
-        "quotes": "off",
-        "semi": "off",
         "no-unused-vars": "off",
         "no-console": "off",
-        "no-undef": "off"
+        "no-undef": "off",
+        "indent": ["error", 4, { "SwitchCase": 1 }]
     }
 }
