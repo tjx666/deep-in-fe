@@ -9,11 +9,11 @@ describe('#test _new', () => {
 
         const user = _new(User, 'lily');
         assert.strictEqual(user.name, 'lily');
-    })
+    });
 
     it('#return value is object', () => {
         const obj = {
-            age: 22
+            age: 22,
         };
 
         function User(name) {
@@ -23,5 +23,5 @@ describe('#test _new', () => {
 
         const user = _new(User, 'lily');
         assert.strictEqual(user, obj);
-    })
-})
+    });
+});

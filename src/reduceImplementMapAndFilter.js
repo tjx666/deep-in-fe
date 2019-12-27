@@ -1,20 +1,19 @@
-// 使用 reduce 实现 map 
+// 使用 reduce 实现 map
 
-let testArray = ['a', 'B', 'c'];
+const testArray = ['a', 'B', 'c'];
 
 const thisArgObj = {
-    name: 'lyreal666'
+    name: 'lyreal666',
 };
 
-
-// reduce 实现 marginTop: 
-Array.prototype.reduceMap = function (fn, thisArg) {
+// reduce 实现 marginTop:
+Array.prototype.reduceMap = function(fn, thisArg) {
     return this.reduce((previous, current, index, array) => {
-        return previous.concat([fn.call(thisArg, current, index, array)])
-    }, [])
-}
+        return previous.concat([fn.call(thisArg, current, index, array)]);
+    }, []);
+};
 
-const mapToUpperElements = testArray.reduceMap(function (value, index, array) {
+const mapToUpperElements = testArray.reduceMap(function(value, index, array) {
     if (index === 0) {
         console.log(this.name);
         console.log(array);
@@ -24,13 +23,14 @@ const mapToUpperElements = testArray.reduceMap(function (value, index, array) {
 
 console.log({ mapToUpperElements });
 
-
-// reduce 实现 filter: 
+// reduce 实现 filter:
 Array.prototype.reduceFilter = function(fn, thisArg) {
     return this.reduce((previous, current, index, array) => {
-        return previous.concat(fn.call(thisArg, current, index, array) ? [current] : [])
+        return previous.concat(
+            fn.call(thisArg, current, index, array) ? [current] : []
+        );
     }, []);
-}
+};
 
 const upperCaseElements = testArray.reduceFilter(function(value, index, array) {
     if (index === 0) {
@@ -41,6 +41,3 @@ const upperCaseElements = testArray.reduceFilter(function(value, index, array) {
 }, thisArgObj);
 
 console.log({ upperCaseElements });
-
-
-

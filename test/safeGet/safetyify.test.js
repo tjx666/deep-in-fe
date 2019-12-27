@@ -14,7 +14,11 @@ describe('safetyify', () => {
     });
 
     it('get normal value', function() {
-        const testObj = { father: { son: { name: 'lily' } }, nul: null, und: undefined };
+        const testObj = {
+            father: { son: { name: 'lily' } },
+            nul: null,
+            und: undefined,
+        };
         const safeObj = safetyify(testObj);
         assert.strictEqual('lily', safeObj.father.son.name.get());
         assert.strictEqual(testObj.father, safeObj.father.get());

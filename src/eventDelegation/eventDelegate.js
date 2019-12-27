@@ -1,7 +1,7 @@
 const eventDelegate = (parentSelector, targetSelector, events, callback) => {
     const delegateCallback = (event, ...args) => {
         let { target } = event;
-        const currentTarget = event.currentTarget;
+        const { currentTarget } = event;
 
         while (target !== currentTarget) {
             if (target.matches(targetSelector)) {
@@ -10,11 +10,14 @@ const eventDelegate = (parentSelector, targetSelector, events, callback) => {
 
             target = target.parentNode;
         }
-    }
-    
-    events.trim().split(/\s+/).forEach(event => {
-        document.querySelectorAll(parentSelector).forEach(parentEle => {
-            parentEle.addEventListener(event, delegateCallback);
-        })
-    })
-}
+    };
+
+    events
+        .trim()
+        .split(/\s+/)
+        .forEach(event => {
+            document.querySelectorAll(parentSelector).forEach(parentEle => {
+                parentEle.addEventListener(event, delegateCallback);
+            });
+        });
+};

@@ -1,14 +1,15 @@
 // setTimeout  实现 setInterval
 
-const mySetInterval = function (callback, timeout) {
+const mySetInterval = function(callback, timeout) {
     const timer = setTimeout(() => {
         callback();
         arguments.callee(callback, timeout);
     }, timeout);
 
     return timer;
-}
+};
 
+// eslint-disable-next-line prefer-const
 let times = 0;
 // mySetInterval(() => {
 //     console.log(`${++times} 秒后...`);
@@ -21,7 +22,6 @@ let times = 0;
 // }
 
 // setTimeout(loop, 1000);
-
 
 // setInterval 模拟 setTimeout
 const mySetTimeout = (callback, timeout) => {

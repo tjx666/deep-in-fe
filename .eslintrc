@@ -3,11 +3,10 @@
         "browser": true,
         "commonjs": true,
         "es6": true,
-        "node": true
+        "node": true,
+        "mocha": true
     },
-    "extends": [
-        "airbnb-base"
-    ],
+    "extends": ["airbnb-base", "plugin:prettier/recommended"],
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"
@@ -16,5 +15,31 @@
         "ecmaVersion": 2019
     },
     "rules": {
+        "prettier/prettier": "off",
+
+        "no-console": "off",
+        "no-unused-vars": "warn",
+        "no-param-reassign": "off",
+        "func-names": "off",
+        "global-require": "off",
+        "no-underscore-dangle": "off",
+        "no-unused-expressions": "off",
+        "no-shadow": "off",
+        "no-eval": "off",
+        "no-restricted-syntax": "off",
+        "no-bitwise": "off",
+        "consistent-return": "off",
+        "array-callback-return": "off",
+        "no-plusplus": "off",
+        "no-caller": "off",
+        "no-restricted-properties": "off",
+        "no-proto": "off",
+        "max-classes-per-file": "off",
+        "no-extend-native": "off",
+        "no-prototype-builtins": "off",
+        
+
+        "import/newline-after-import": "off",
+        "import/no-dynamic-require": "off"
     }
 }

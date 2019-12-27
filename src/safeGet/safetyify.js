@@ -4,14 +4,19 @@ const lodashGet = require('./lodashGet');
  * 将一个普通对象安全化
  * @param {*} nullableObject null/undefined 或者一个普通对象，不包括 data, regexp 等标准对象
  */
-const safetyify = (nullableObject) => {
-    if (Object.prototype.toString.call(nullableObject) !== '[object Object]' && nullableObject != null) {
-        throw new TypeError('nullableObject must be normal object, null or undefined');
+const safetyify = nullableObject => {
+    if (
+        Object.prototype.toString.call(nullableObject) !== '[object Object]' &&
+        nullableObject != null
+    ) {
+        throw new TypeError(
+            'nullableObject must be normal object, null or undefined'
+        );
     }
 
     // 给 null/undefined 设置代理会报错，所以改成空对象
     if (nullableObject == null) {
-        nullableObject = {}
+        nullableObject = {};
     }
 
     // 保存特性路径
@@ -24,7 +29,7 @@ const safetyify = (nullableObject) => {
                 return receiver;
             }
 
-            return (defaultValue) => {
+            return defaultValue => {
                 const result = lodashGet(target, propPath, defaultValue);
                 propPath.length = 0;
                 return result;

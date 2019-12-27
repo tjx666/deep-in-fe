@@ -6,7 +6,9 @@
 
 const get = (object, path, defaultValue) => {
     if (!Array.isArray(path) && typeof path !== 'string')
-        throw new TypeError(`path must be array or string, but you pass the type ${typeof path}`);
+        throw new TypeError(
+            `path must be array or string, but you pass the type ${typeof path}`
+        );
 
     // object 的类型如果是 null 或者 undefined 直接返回 default value
     if (object == null) return defaultValue;
@@ -21,7 +23,7 @@ const get = (object, path, defaultValue) => {
 
     let index = 0;
     let property;
-    const length = propArray.length;
+    const { length } = propArray;
     // 利用特性数组循环赋值, 取到 undefined 或者 null 就停止循环
     // 有可能是中途某个属性本身是 null 或 undefined，也有可能是根本没有当前 property 这个属性
     while (object != null && index < length) {
@@ -29,7 +31,9 @@ const get = (object, path, defaultValue) => {
         object = object[property];
     }
 
-    return index && index === length && object !== undefined ? object : defaultValue;
+    return index && index === length && object !== undefined
+        ? object
+        : defaultValue;
 };
 
 module.exports = get;

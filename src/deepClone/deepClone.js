@@ -1,5 +1,7 @@
 /* eslint-disable valid-typeof */
-const isObj = (obj) => (typeof obj === 'object' && typeof obj !== null) || typeof obj === 'function';
+const isObj = obj =>
+    (typeof obj === 'object' && typeof obj !== null) ||
+    typeof obj === 'function';
 
 const deepClone = (obj, hasTravelMap = new WeakMap()) => {
     if (!isObj(obj)) return obj;

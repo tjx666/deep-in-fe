@@ -1,6 +1,6 @@
-const curry = (fn) => {
+const curry = fn => {
     const allArgs = [];
-    const length = fn.length;
+    const { length } = fn;
 
     const proxyObj = new Proxy(fn, {
         apply(target, ctx, args) {
@@ -8,9 +8,8 @@ const curry = (fn) => {
 
             if (allArgs.length < length) {
                 return proxyObj;
-            } else {
-                return fn.apply(ctx, allArgs);
             }
+            return fn.apply(ctx, allArgs);
         },
     });
     return proxyObj;

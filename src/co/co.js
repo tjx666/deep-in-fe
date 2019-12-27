@@ -1,11 +1,14 @@
-const co = (generator) => {
+const co = generator => {
     const it = generator();
     const run = (it, lastValue) => {
         const { done, value } = lastValue ? it.next(lastValue) : it.next();
 
         if (!done) {
-            if (Reflect.apply(Object.prototype.toString, value, []) === '[object Promise]')
-                value.then((data) => run(it, data));
+            if (
+                Reflect.apply(Object.prototype.toString, value, []) ===
+                '[object Promise]'
+            )
+                value.then(data => run(it, data));
             else run(it, value);
         }
     };
@@ -13,7 +16,7 @@ const co = (generator) => {
     run(it);
 };
 
-const sleep = (seconds) => {
+const sleep = seconds => {
     return new Promise((resolve, reject) => {
         setTimeout(() => resolve(), seconds * 1000);
     });

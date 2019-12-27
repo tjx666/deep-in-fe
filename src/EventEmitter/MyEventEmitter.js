@@ -18,7 +18,9 @@ class MyEventEmitter {
                 this.listeners[eventName].push(listener);
                 this.defaultMaxListeners += 1;
             } else {
-                throw new Error(`The listener's count of event ${eventName} had been max: ${this.defaultMaxListeners}!`);
+                throw new Error(
+                    `The listener's count of event ${eventName} had been max: ${this.defaultMaxListeners}!`
+                );
             }
         } else {
             this.listeners[eventName] = [listener];
@@ -28,16 +30,19 @@ class MyEventEmitter {
     removeListener(eventName, listener) {
         if (!this.listeners[eventName]) {
             return;
-        } else {
-            let listenerIndex = -1;
-            this.listeners[eventName].some((existListener, index) => {
-                if (existListener === listener || existListener.oldListener === listener) {
-                    listenerIndex = index;
-                    return true;
-                }
-            })
-            ~listenerIndex && this.listeners[eventName].splice(listenerIndex, 1);
         }
+
+        let listenerIndex = -1;
+        this.listeners[eventName].some((existListener, index) => {
+            if (
+                existListener === listener ||
+                existListener.oldListener === listener
+            ) {
+                listenerIndex = index;
+                return true;
+            }
+        });
+        ~listenerIndex && this.listeners[eventName].splice(listenerIndex, 1);
     }
 
     removeAllListeners(eventName) {
@@ -61,9 +66,9 @@ class MyEventEmitter {
         listener = (...args) => {
             oldListener(...args);
             this.removeListener(eventName, listener);
-        }
+        };
         listener.oldListener = oldListener;
-        this.addListener(eventName, listener)
+        this.addListener(eventName, listener);
     }
 
     emit(eventName, ...args) {
@@ -75,7 +80,6 @@ class MyEventEmitter {
         }
     }
 }
-
 
 MyEventEmitter.defaultMaxListeners = 10;
 module.exports = MyEventEmitter;

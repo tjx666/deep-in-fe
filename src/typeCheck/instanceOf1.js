@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 const instance_of = (leftOperand, rightOperand) => {
     const rightOperandPrototype = rightOperand.prototype;
     let prototype = Object.getPrototypeOf(leftOperand);
@@ -8,6 +10,6 @@ const instance_of = (leftOperand, rightOperand) => {
     }
 
     return false;
-}
+};
 
 module.exports = instance_of;
