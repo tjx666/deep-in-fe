@@ -1,17 +1,10 @@
 sudo: false
-
-os:
-    - linux
-
 language: node_js
-
 cache:
     - yarn
-
 install:
     - yarn
-
 script:
     - npm run lint
     - npm test
-    - npm run cov
+    - npm run coverage
