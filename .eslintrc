@@ -6,13 +6,14 @@
         "node": true,
         "mocha": true
     },
+    "parser": "babel-eslint",
     "extends": ["airbnb-base", "plugin:prettier/recommended"],
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"
     },
     "parserOptions": {
-        "ecmaVersion": 2019
+        "ecmaVersion": 2020
     },
     "rules": {
         "prettier/prettier": "off",
@@ -21,6 +22,7 @@
         "consistent-return": "off",
         "func-names": "off",
         "global-require": "off",
+        "lines-between-class-members": "off",
         "max-classes-per-file": "off",
         "no-bitwise": "off",
         "no-caller": "off",

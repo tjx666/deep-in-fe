@@ -1,15 +1,13 @@
-const Status = {
-    PENDING: Symbol('pending'),
-    FULFILLED: Symbol('fulfilled'),
-    REJECTED: Symbol('rejected'),
-};
-
 class MyPromise {
+    // Promise 三种状态
+    static status = {
+        PENDING: Symbol('Promise(pending)'), // 初始状态
+        FULFILLED: Symbol('Promise(fulfilled)'), // 成功执行
+        REJECTED: Symbol('Promise(rejected)'), // 执行出错
+    };
+
     static resolvePromise(promise2, x, resolve, reject) {
-        if (promise2 === x)
-            throw new TypeError(
-                'Chaining cycle detected for promise #<Promise></Promise>'
-            );
+        if (promise2 === x) throw new TypeError('Chaining cycle detected for promise #<Promise></Promise>');
         const isObject =
             x !== null &&
             (Object.prototype.toString.call(x) === '[object Object]' ||
@@ -23,12 +21,7 @@ class MyPromise {
                 try {
                     x.then(
                         y => {
-                            MyPromise.resolvePromise(
-                                promise2,
-                                y,
-                                resolve,
-                                reject
-                            );
+                            MyPromise.resolvePromise(promise2, y, resolve, reject);
                         },
                         reason => {
                             reject(reason);
@@ -69,8 +62,7 @@ class MyPromise {
                 promise
                     .then(data => {
                         resultArray.push(data);
-                        if (resultArray.length === promiseArray.length)
-                            resolve(resultArray);
+                        if (resultArray.length === promiseArray.length) resolve(resultArray);
                     })
                     .catch(reject);
             });
@@ -84,28 +76,25 @@ class MyPromise {
             promiseArray.forEach(promise =>
                 promise.then(resolve, err => {
                     errArray.push(err);
-                    if (errArray.length === promiseArray.length)
-                        reject(errArray);
+                    if (errArray.length === promiseArray.length) reject(errArray);
                 })
             );
         });
     }
 
     constructor(executor) {
-        this.status = Status.PENDING;
+        this.MyPromise = MyPromise.status.PENDING;
         this.value = null;
         this.reason = null;
         this.onFulfilledCallback = value => value;
         this.onRejectedCallback = reason => {
-            console.warn(
-                `UnhandledPromiseRejectionWarning: ${JSON.stringify(reason)}`
-            );
+            console.warn(`UnhandledPromiseRejectionWarning: ${JSON.stringify(reason)}`);
         };
 
         const resolve = value => {
             setTimeout(() => {
-                if (this.status === Status.PENDING) {
-                    this.status = Status.FULFILLED;
+                if (this.MyPromise === MyPromise.status.PENDING) {
+                    this.MyPromise = MyPromise.status.FULFILLED;
                     this.value = value;
                     this.onFulfilledCallback();
                 }
@@ -114,8 +103,8 @@ class MyPromise {
 
         const reject = reason => {
             setTimeout(() => {
-                if (this.status === Status.PENDING) {
-                    this.status = Status.REJECTED;
+                if (this.MyPromise === MyPromise.status.PENDING) {
+                    this.MyPromise = MyPromise.status.REJECTED;
                     this.reason = reason;
                     this.onRejectedCallback();
                 }
@@ -129,56 +118,59 @@ class MyPromise {
         }
     }
 
-    then(onFulfilled, onRejected) {
-        const self = this;
-        onFulfilled =
-            typeof onFulfilled === 'function' ? onFulfilled : value => value;
-        onRejected =
-            typeof onRejected === 'function'
-                ? onRejected
-                : err => {
-                      throw err;
-                  };
+    /**
+     *
+     * @param {*} onFulfilled 在 executor 中调用 resolve(result) 后的回调
+     * @param {*} onRejected 在 executor 中调用 reject(err) 或者抛出异常时的回调
+     */
+    then = (onFulfilled, onRejected) => {
+        // 处理回调不是函数的情况，要确保后续调用 then 和 catch 能继续拿到 result 和 err
+        if (typeof onFulfilled !== 'function') onFulfilled = result => result;
+        if (typeof onRejected !== 'function') {
+            onRejected = err => {
+                throw err;
+            };
+        }
 
+        // 链式调用一般就两种实现方式：
+        // 1. 返回本身
+        // 2. 返回一个新对象
+        // 因为 then 中抛出异常会导致 Promise 状态从 fulfilled 变成 rejected
+        // 但是 A+ 规范规定: Promise 状态一旦发生改变不能发生变化，所以我们采用返回新实例的方式来实现链式调用
         const promise2 = new MyPromise((resolve, reject) => {
-            if (self.status === Status.PENDING) {
-                self.onFulfilledCallback = () => {
+            if (this.MyPromise === MyPromise.status.PENDING) {
+                this.onFulfilledCallback = () => {
                     setTimeout(() => {
                         try {
-                            const x = onFulfilled(self.value);
-                            MyPromise.resolvePromise(
-                                promise2,
-                                x,
-                                resolve,
-                                reject
-                            );
+                            const x = onFulfilled(this.value);
+                            MyPromise.resolvePromise(promise2, x, resolve, reject);
                         } catch (reason) {
                             reject(reason);
                         }
                     });
                 };
 
-                self.onRejectedCallback = () => {
+                this.onRejectedCallback = () => {
                     try {
-                        const x = onRejected(self.reason);
+                        const x = onRejected(this.reason);
                         MyPromise.resolvePromise(promise2, x, resolve, reject);
                     } catch (reason) {
                         reject(reason);
                     }
                 };
-            } else if (self.status === Status.FULFILLED) {
+            } else if (this.MyPromise === MyPromise.status.FULFILLED) {
                 setTimeout(() => {
                     try {
-                        const x = onFulfilled(self.value);
+                        const x = onFulfilled(this.value);
                         MyPromise.resolve(promise2, x, resolve, reject);
                     } catch (reason) {
                         reject(reason);
                     }
                 });
-            } else if (self.status === Status.REJECTED) {
+            } else if (this.MyPromise === MyPromise.status.REJECTED) {
                 setTimeout(() => {
                     try {
-                        const x = onRejected(self.reason);
+                        const x = onRejected(this.reason);
                         MyPromise.resolvePromise(promise2, x, resolve, reject);
                     } catch (reason) {
                         reject(reason);
@@ -188,7 +180,7 @@ class MyPromise {
         });
 
         return promise2;
-    }
+    };
 
     catch(onReject) {
         this.then(null, onReject);
