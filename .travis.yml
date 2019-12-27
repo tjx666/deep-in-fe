@@ -5,16 +5,11 @@ os:
 
 language: node_js
 
-node_js:
-    - "10"
-
 cache:
-    yarn: true
-    directories:
-        - node_modules
+    - yarn
 
 install:
-    - yarn --frozen-lockfile --non-interactive
+    - yarn
 
 script:
     - npm run lint

@@ -1,15 +1,11 @@
-## 探索 javascript 的奥秘
+## 深入前端系列
 
-[![Build Status](https://travis-ci.org/tjx666/javascript-code-lab.svg?branch=master)](https://travis-ci.org/tjx666/javascript-code-lab)
-[![codecov](https://codecov.io/gh/tjx666/javascript-code-lab/branch/master/graph/badge.svg)](https://codecov.io/gh/tjx666/javascript-code-lab)
-
-所有的代码都是我参考了大量资料后总结优化后写下的代码。
-目前没有写详细的注释，后续我应该会一个知识点或者多个知识点写一篇博客，到时候再加上一些详细的注释。
+[![Build Status](https://travis-ci.org/tjx666/javascript-code-lab.svg?branch=master)](https://travis-ci.org/tjx666/javascript-code-lab) [![codecov](https://codecov.io/gh/tjx666/javascript-code-lab/branch/master/graph/badge.svg)](https://codecov.io/gh/tjx666/javascript-code-lab) [![dependencies Status](https://david-dm.org/tjx666/koa-restful-boilerplate/status.svg)](https://david-dm.org/tjx666/koa-restful-boilerplate) [![devDependencies Status](https://david-dm.org/tjx666/koa-restful-boilerplate/dev-status.svg)](https://david-dm.org/tjx666/koa-restful-boilerplate?type=dev) [![Known Vulnerabilities](https://snyk.io/test/github/tjx666/koa-restful-boilerplate/badge.svg?targetFile=package.json)](https://snyk.io/test/github/tjx666/koa-restful-boilerplate?targetFile=package.json) [![Percentage of issues still open](https://isitmaintained.com/badge/open/tjx666/koa-restful-boilerplate.svg)](http://isitmaintained.com/project/tjx666/koa-restful-boilerplate)
 
 1. 手写 ES6 Promise √
 2. EventEmitter √
 3. 类型检测
-   + 手写 instanceOf √
+   - 手写 instanceOf √
 4. new 操作符 √
 5. 原型继承 √
 6. 事件委托 √
@@ -21,11 +17,11 @@
 12. setTimeout 实现 setInterval √
 13. 实现 sleep 函数 √
 14. ajax
-    + 原生 ajax √
-    + jsonp √
+    - 原生 ajax √
+    - jsonp √
 15. 处理服务器返回 null
-    + lodash get √
-    + 基于 proxy 的 safetyify √
+    - lodash get √
+    - 基于 proxy 的 safetyify √
 16. Koa 中间件机制 √
 17. co √
 18. curry √
