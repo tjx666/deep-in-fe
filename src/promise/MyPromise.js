@@ -5,6 +5,17 @@ const PromiseStatus = Object.freeze({
 });
 
 class MyPromise {
+    static deferred() {
+        const dfd = {};
+
+        dfd.promise = new Promise((resolve, reject) => {
+            dfd.resolve = resolve;
+            dfd.reject = reject;
+        });
+
+        return dfd;
+    }
+
     static resolvePromise(promise2, x, resolve, reject) {
         // 循环链检测
         if (promise2 === x) reject(new TypeError('Chaining cycle detected for promise #<Promise></Promise>'));
@@ -111,28 +122,35 @@ class MyPromise {
         this.status = PromiseStatus.PENDING;
         this.value = null;
         this.reason = null;
-        this.onFulfilledCallback = value => {
+        this.onFulfilledCallbacks = [];
+        this.onRejectedCallbacks = [];
+
+        if (typeof executor !== 'function') {
+            throw new TypeError(`Promise resolver ${executor} is not a function`);
+        }
+
+        this.onFulfilledCallbacks.push(value => {
             // 默认的回调也要检查是否循环链
             if (value === this) throw new TypeError('Chaining cycle detected for promise #<Promise>');
 
             return value;
-        };
+        });
 
-        this.onRejectedCallback = reason => {
+        this.onRejectedCallback.push(reason => {
             if (reason === this) throw new TypeError('Chaining cycle detected for promise #<Promise>');
 
             console.error(`UnhandledPromiseRejectionWarning: ${reason}`);
             console.error(
                 `UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch().`
             );
-        };
+        });
 
         const resolve = value => {
             if (this.status === PromiseStatus.PENDING) {
                 this.status = PromiseStatus.FULFILLED;
                 this.value = value;
 
-                setTimeout(this.onFulfilledCallback);
+                this.onFulfilledCallbacks.forEach(cb => setTimeout(() => cb(this.value), 0));
             }
         };
 
@@ -141,7 +159,7 @@ class MyPromise {
                 this.status = PromiseStatus.REJECTED;
                 this.reason = reason;
 
-                setTimeout(this.onRejectedCallback);
+                this.onRejectedCallbacks.forEach(cb => setTimeout(() => cb(reason), 0));
             }
         };
 
@@ -173,16 +191,23 @@ class MyPromise {
         // 但是 A+ 规范规定: Promise 状态一旦发生改变不能发生变化，所以我们采用返回新实例的方式来实现链式调用
         const promise2 = new MyPromise((resolve, reject) => {
             if (this.status === PromiseStatus.PENDING) {
-                this.onFulfilledCallback = value => {
+                this.onFulfilledCallbacks.push(value => {
                     try {
                         const x = onfulfilled(value);
                         MyPromise.resolvePromise(promise2, x, resolve, reject);
                     } catch (error) {
                         reject(error);
                     }
-                };
+                });
 
-                this.onRejectedCallback = reason => reject(reason);
+                this.onRejectedCallbacks.push(reason => {
+                    try {
+                        const x = onrejected(reason);
+                        MyPromise.resolvePromise(promise2, x, resolve, reject);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
             } else if (this.status === PromiseStatus.FULFILLED) {
                 setTimeout(() => {
                     try {
@@ -191,7 +216,7 @@ class MyPromise {
                     } catch (error) {
                         reject(error);
                     }
-                });
+                }, 0);
             } else if (this.status === PromiseStatus.REJECTED) {
                 setTimeout(() => {
                     try {
@@ -200,7 +225,7 @@ class MyPromise {
                     } catch (error) {
                         reject(error);
                     }
-                });
+                }, 0);
             }
         });
 
