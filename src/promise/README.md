@@ -1,1 +1,4 @@
-参考了: [手写一个 Promise](https://zhuanlan.zhihu.com/p/60836800)
+参考资料：
+
+- [promise A+ 规范](https://promisesaplus.com/)
+- [promise-tests](https://github.com/promises-aplus/promises-tests)
