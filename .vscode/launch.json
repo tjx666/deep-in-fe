@@ -2,11 +2,27 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "dev",
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
             "skipFiles": ["<node_internals>/**"],
-            "program": "${workspaceFolder}\\index.js"
+            "program": "${file}"
+        },
+        {
+            "name": "test all",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "args": ["--timeout", "999999", "${workspaceFolder}/test"],
+            "sourceMaps": true
+        },
+        {
+            "name": "test file",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "args": ["--timeout", "999999", "${file}"],
+            "sourceMaps": true
         }
     ]
 }

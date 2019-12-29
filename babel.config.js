@@ -12,11 +12,14 @@ module.exports = function(api) {
                 corejs: 3,
             },
         ],
+        'power-assert',
     ];
     const plugins = ['@babel/plugin-transform-runtime', '@babel/plugin-proposal-class-properties'];
 
     return {
         presets,
         plugins,
+        sourceMaps: true,
+        retainLines: true,
     };
 };

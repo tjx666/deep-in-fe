@@ -7,8 +7,8 @@
     "author": "YuTengjing",
     "license": "MIT",
     "scripts": {
-        "test": "mocha -r intelli-espower-loader",
-        "coverage": "nyc --reporter=lcov yarn test && codecov",
+        "coverage": "nyc --reporter=lcov mocha && codecov",
+        "coverage-local": "mocha --reporter mochawesome",
         "lint": "eslint -c .eslintrc --ext .js ./{src,test}/**/*.js"
     },
     "husky": {
@@ -31,7 +31,9 @@
         "@babel/plugin-proposal-class-properties": "^7.7.4",
         "@babel/plugin-transform-runtime": "^7.7.6",
         "@babel/preset-env": "^7.7.7",
+        "@babel/register": "^7.7.7",
         "babel-eslint": "^10.0.3",
+        "babel-preset-power-assert": "^3.0.0",
         "codecov": "^3.5.0",
         "core-js": "^3.6.1",
         "eslint": "^6.8.0",
@@ -40,9 +42,9 @@
         "eslint-plugin-import": "^2.19.1",
         "eslint-plugin-prettier": "^3.1.2",
         "husky": "^3.0.4",
-        "intelli-espower-loader": "^1.0.1",
         "lint-staged": "^9.2.5",
         "mocha": "^6.1.3",
+        "mochawesome": "^4.1.0",
         "nyc": "^15.0.0",
         "power-assert": "^1.6.1",
         "prettier": "^1.18.2",
