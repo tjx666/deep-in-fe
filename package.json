@@ -7,9 +7,11 @@
     "author": "YuTengjing",
     "license": "MIT",
     "scripts": {
-        "coverage": "nyc --reporter=lcov mocha && codecov",
+        "test": "mocha",
+        "coverage": "nyc --reporter=lcov yarn test && codecov",
         "coverage-local": "mocha --reporter mochawesome",
-        "lint": "eslint -c .eslintrc --ext .js ./{src,test}/**/*.js"
+        "lint": "eslint -c .eslintrc --ext .js ./{src,test}/**/*.js",
+        "clean": "rimraf -rf ./.nyc_output ./coverage ./mochawesome-report"
     },
     "husky": {
         "hooks": {
@@ -48,6 +50,7 @@
         "nyc": "^15.0.0",
         "power-assert": "^1.6.1",
         "prettier": "^1.18.2",
-        "promises-aplus-tests": "^2.1.2"
+        "promises-aplus-tests": "^2.1.2",
+        "rimraf": "^3.0.0"
     }
 }

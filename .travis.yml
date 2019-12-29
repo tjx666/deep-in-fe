@@ -5,5 +5,5 @@ cache:
 install:
     - yarn
 script:
-    - npm run lint
-    - npm run coverage
+    - yarn run lint
+    - yarn run coverage
