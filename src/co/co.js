@@ -1,34 +1,109 @@
-const co = generator => {
-    const it = generator();
-    const run = (it, lastValue) => {
-        const { done, value } = lastValue ? it.next(lastValue) : it.next();
+/* eslint-disable no-use-before-define */
+const { types } = require('util');
 
-        if (!done) {
-            if (
-                Reflect.apply(Object.prototype.toString, value, []) ===
-                '[object Promise]'
-            )
-                value.then(data => run(it, data));
-            else run(it, value);
-        }
-    };
-
-    run(it);
-};
-
-const sleep = seconds => {
+/**
+ * 模拟 async/await 异步流程控制的工具函数
+ *
+ * @param {Function} generatorFn
+ * @return {Promise}
+ */
+function co(generatorFn, ...args) {
     return new Promise((resolve, reject) => {
-        setTimeout(() => resolve(), seconds * 1000);
+        // 获取生成器对象
+        const generatorObj = typeof generatorFn === 'function' ? generatorFn.apply(this, args) : generatorFn;
+        // 如果返回不是生成器对象就直接 resolve
+        if (!types.isGeneratorObject(generatorObj)) return resolve(generatorFn);
+
+        function onFulfilled(value) {
+            let result;
+
+            try {
+                result = generatorObj.next(value);
+            } catch (err) {
+                return reject(err);
+            }
+
+            next(result);
+        }
+
+        function onRejected(err) {
+            let result;
+
+            try {
+                result = generatorFn.throw(err);
+            } catch (err) {
+                return reject(err);
+            }
+
+            next(result);
+        }
+
+        const next = result => {
+            if (result.done) return resolve(result.value);
+
+            const promise = toPromise.call(this, result.value);
+            if (types.isPromise(promise)) return promise.then(onFulfilled, onRejected);
+
+            return onRejected(
+                new TypeError(
+                    // prettier-ignore
+                    `You may only yield a function, promise, generator, array, or object, but the following object was passed: "${String(result.value)}"`
+                )
+            );
+        };
+
+        onFulfilled();
     });
-};
-
-const getStudentFromDB = () => {
-    return sleep(3).then(() => ({ name: 'lyreal666', age: 22 }));
-};
-
-function* worker() {
-    const student = yield getStudentFromDB();
-    console.log(student);
 }
 
-co(worker);
+co.wrap = function(fn) {
+    createPromise.__generatorFunction__ = fn;
+
+    function createPromise(...args) {
+        return co.call(this, fn.apply(this, args));
+    }
+
+    return createPromise;
+};
+
+function objectToPromise(obj) {
+    const results = new obj.constructor();
+
+    const defer = (promise, key) => {
+        results[key] = undefined;
+        promises.push(
+            promise.then(value => {
+                results[key] = value;
+            })
+        );
+    };
+
+    const promises = Object.entries(([key, value]) => {
+        const promise = toPromise.call(this, value);
+
+        if (types.isPromise(promise)) {
+            defer(promise, key);
+        } else {
+            results[key] = value;
+        }
+    });
+
+    return Promise.all(promises).then(() => results);
+}
+
+function toPromise(value) {
+    if (!value) return value;
+    if (types.isPromise(value)) return value;
+    if (types.isGeneratorFunction(value) || types.isGeneratorObject(value)) return co.call(this, value);
+    if (Array.isArray(value)) return Promise.all(value.map(toPromise, this));
+    if (isObject(value)) return objectToPromise(value);
+
+    return value;
+}
+
+function isObject(obj) {
+    return obj && obj.constructor === Object;
+}
+
+// 兼容 esm 以及解构赋值
+module.exports = co.default = co.co = co;
