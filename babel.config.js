@@ -5,9 +5,6 @@ module.exports = function(api) {
         [
             '@babel/env',
             {
-                targets: {
-                    browsers: ['last 2 version', 'Firefox ESR', '> 1%', 'ie >= 9'],
-                },
                 useBuiltIns: 'usage',
                 corejs: 3,
             },
