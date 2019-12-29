@@ -1,5 +1,4 @@
 /* eslint-disable no-use-before-define */
-const { types } = require('util');
 
 /**
  * 模拟 async/await 异步流程控制的工具函数
@@ -12,7 +11,7 @@ function co(generatorFn, ...args) {
         // 获取生成器对象
         const generatorObj = typeof generatorFn === 'function' ? generatorFn.apply(this, args) : generatorFn;
         // 如果返回不是生成器对象就直接 resolve
-        if (!types.isGeneratorObject(generatorObj)) return resolve(generatorFn);
+        if (!isGenerator(generatorObj)) return resolve(generatorFn);
 
         function onFulfilled(value) {
             let result;
@@ -42,7 +41,7 @@ function co(generatorFn, ...args) {
             if (result.done) return resolve(result.value);
 
             const promise = toPromise.call(this, result.value);
-            if (types.isPromise(promise)) return promise.then(onFulfilled, onRejected);
+            if (isPromise(promise)) return promise.then(onFulfilled, onRejected);
 
             return onRejected(
                 new TypeError(
@@ -81,7 +80,7 @@ function objectToPromise(obj) {
     const promises = Object.entries(([key, value]) => {
         const promise = toPromise.call(this, value);
 
-        if (types.isPromise(promise)) {
+        if (isPromise(promise)) {
             defer(promise, key);
         } else {
             results[key] = value;
@@ -93,12 +92,29 @@ function objectToPromise(obj) {
 
 function toPromise(value) {
     if (!value) return value;
-    if (types.isPromise(value)) return value;
-    if (types.isGeneratorFunction(value) || types.isGeneratorObject(value)) return co.call(this, value);
+    if (isPromise(value)) return value;
+    if (isGeneratorFunction(value) || isGenerator(value)) return co.call(this, value);
     if (Array.isArray(value)) return Promise.all(value.map(toPromise, this));
     if (isObject(value)) return objectToPromise(value);
 
     return value;
+}
+
+function isPromise(obj) {
+    return typeof obj.then === 'function';
+}
+
+function isGenerator(obj) {
+    return obj && typeof obj.next === 'function' && typeof obj.throw === 'function';
+}
+
+function isGeneratorFunction(obj) {
+    const { constructor } = obj;
+
+    if (!constructor) return false;
+    if (constructor.name === 'GeneratorFunction' || constructor.displayName === 'GeneratorFunction') return true;
+
+    return isGenerator(constructor.prototype);
 }
 
 function isObject(obj) {
