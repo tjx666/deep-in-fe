@@ -154,6 +154,10 @@ class MyPromise {
 
                 // 使用 setTimeout 模拟 micro task
                 this.onFulfilledCallbacks.forEach(cb => setTimeout(() => cb(this.value), 0));
+
+                // 清空回调
+                this.onFulfilledCallbacks = null;
+                this.onRejectedCallbacks = null;
             }
         };
 
@@ -163,6 +167,9 @@ class MyPromise {
                 this.reason = reason;
 
                 this.onRejectedCallbacks.forEach(cb => setTimeout(() => cb(reason), 0));
+
+                this.onFulfilledCallbacks = null;
+                this.onRejectedCallbacks = null;
             }
         };
 

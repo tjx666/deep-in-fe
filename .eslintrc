@@ -40,6 +40,7 @@
         "no-unused-expressions": "off",
         "no-unused-vars": "warn",
         "no-multi-assign": "off",
+        "no-restricted-globals": "off",
 
         "import/newline-after-import": "off",
         "import/no-dynamic-require": "off"
