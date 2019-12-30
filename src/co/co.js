@@ -29,7 +29,7 @@ function co(generatorFn, ...args) {
             let result;
 
             try {
-                result = generatorFn.throw(err);
+                result = generatorObj.throw(err);
             } catch (err) {
                 return reject(err);
             }
@@ -67,21 +67,17 @@ co.wrap = function(fn) {
 
 function objectToPromise(obj) {
     const results = new obj.constructor();
-
-    const defer = (promise, key) => {
-        results[key] = undefined;
-        promises.push(
-            promise.then(value => {
-                results[key] = value;
-            })
-        );
-    };
-
-    const promises = Object.entries(([key, value]) => {
+    let promises = [];
+    promises = Object.entries(obj).map(([key, value]) => {
         const promise = toPromise.call(this, value);
 
         if (isPromise(promise)) {
-            defer(promise, key);
+            results[key] = undefined;
+            promises.push(
+                promise.then(value => {
+                    results[key] = value;
+                })
+            );
         } else {
             results[key] = value;
         }
