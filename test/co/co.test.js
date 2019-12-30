@@ -31,6 +31,20 @@ describe('#co', () => {
             await co(gen);
         });
 
+        it('#test execute next throw exp', async () => {
+            const gen = function*() {
+                yield { a: sleep(1, 666), b: 999 };
+                // eslint-disable-next-line no-throw-literal
+                throw 666;
+            };
+
+            try {
+                await co(gen);
+            } catch (err) {
+                assert(err === 666);
+            }
+        });
+
         it('#yield generatorFunction', async () => {
             const gen1 = function*() {
                 yield sleep(1, 666);
@@ -44,12 +58,24 @@ describe('#co', () => {
 
         it('#yield Object', async () => {
             const gen = function*() {
-                const value = yield { a: sleep(1, 666) };
+                const value = yield { a: sleep(1, 666), b: 999 };
                 console.log(value);
                 assert(value.a === 666);
             };
 
             await co(gen);
+        });
+
+        it('#test yield not arrowed value', async () => {
+            const gen = function*() {
+                yield 333;
+            };
+
+            try {
+                await co(gen);
+            } catch (err) {
+                assert(err instanceof TypeError);
+            }
         });
     });
 
