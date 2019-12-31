@@ -59,7 +59,6 @@ describe('#co', () => {
         it('#yield Object', async () => {
             const gen = function*() {
                 const value = yield { a: sleep(1, 666), b: 999 };
-                console.log(value);
                 assert(value.a === 666);
             };
 

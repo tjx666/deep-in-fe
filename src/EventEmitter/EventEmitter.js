@@ -18,9 +18,9 @@ class EventEmitter {
         else this._listenerStore[eventName].push(listener);
 
         // maxListenersCount 等于 0 时等同于 Infinity
-        const currentListenersCount = this._listenerStore[eventName].length || Infinity;
+        const currentListenersCount = this._listenerStore[eventName].length;
         // 添加的事件超出最大事件数会报警告
-        if (currentListenersCount > this._maxListenerCount) {
+        if (currentListenersCount > (this._maxListenerCount || Infinity)) {
             console.warn(
                 `You had add ${currentListenersCount}listeners, more than the max listeners count: ${this._maxListenerCount}`
             );
@@ -68,7 +68,9 @@ class EventEmitter {
      */
     emit(eventName, ...args) {
         if (this._listenerStore[eventName] && this._listenerStore[eventName].length > 0) {
-            this._listenerStore[eventName].forEach(listener => listener(...args));
+            const listenersCopy = [...this._listenerStore[eventName]];
+            listenersCopy.forEach(listener => listener(...args));
+
             return true;
         }
 
