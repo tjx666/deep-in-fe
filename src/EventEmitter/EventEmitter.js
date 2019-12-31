@@ -2,8 +2,8 @@ class EventEmitter {
     // 默认最大订阅数 10
     static defaultMaxListeners = 10;
 
-    #listenerStore = {};
-    #maxListenerCount = EventEmitter.defaultMaxListeners;
+    _listenerStore = {};
+    _maxListenerCount = EventEmitter.defaultMaxListeners;
 
     /**
      * 添加订阅
@@ -13,18 +13,16 @@ class EventEmitter {
      * @param {*} prepend
      */
     on(eventName, listener, prepend = false) {
-        if (!this.#listenerStore[eventName]) this.#listenerStore[eventName] = [listener];
-        else if (prepend) this.#listenerStore[eventName].unshift(listener);
-        else this.#listenerStore[eventName].push(listener);
+        if (!this._listenerStore[eventName]) this._listenerStore[eventName] = [listener];
+        else if (prepend) this._listenerStore[eventName].unshift(listener);
+        else this._listenerStore[eventName].push(listener);
 
         // maxListenersCount 等于 0 时等同于 Infinity
-        const currentListenersCount = this.#listenerStore[eventName].length || Infinity;
+        const currentListenersCount = this._listenerStore[eventName].length || Infinity;
         // 添加的事件超出最大事件数会报警告
-        if (currentListenersCount > this.#maxListenerCount) {
+        if (currentListenersCount > this._maxListenerCount) {
             console.warn(
-                `You had add ${currentListenersCount}listeners, more than the max listeners count: ${
-                    this.#maxListenerCount
-                }`
+                `You had add ${currentListenersCount}listeners, more than the max listeners count: ${this._maxListenerCount}`
             );
         }
 
@@ -38,13 +36,13 @@ class EventEmitter {
      * @param {*} listener
      */
     off(eventName, listener) {
-        if (!this.#listenerStore[eventName]) return;
+        if (!this._listenerStore[eventName]) return;
 
-        const index = this.#listenerStore[eventName].findIndex(
+        const index = this._listenerStore[eventName].findIndex(
             existListener => existListener === listener || existListener.listener === listener
         );
         // 小技巧：只有当 index 等于 -1 的时候， ~index 才等于 0, 转换 bool 值为假。因此，我们可以使用 ~index 表示 index 不等于 -1
-        ~index && this.#listenerStore[eventName].splice(index, 1);
+        ~index && this._listenerStore[eventName].splice(index, 1);
 
         return this;
     }
@@ -69,8 +67,8 @@ class EventEmitter {
      * @returns {boolean} 如果还有事件名为 event 的 listener 返回 true，否则返回 false
      */
     emit(eventName, ...args) {
-        if (this.#listenerStore[eventName] && this.#listenerStore[eventName].length > 0) {
-            this.#listenerStore[eventName].forEach(listener => listener(...args));
+        if (this._listenerStore[eventName] && this._listenerStore[eventName].length > 0) {
+            this._listenerStore[eventName].forEach(listener => listener(...args));
             return true;
         }
 
@@ -78,13 +76,13 @@ class EventEmitter {
     }
 
     listeners(eventName) {
-        return this.#listenerStore[eventName]
-            ? this.#listenerStore[eventName].map(listener => (listener.listener ? listener.listener : listener))
+        return this._listenerStore[eventName]
+            ? this._listenerStore[eventName].map(listener => (listener.listener ? listener.listener : listener))
             : [];
     }
 
     rawListeners(eventName) {
-        return this.#listenerStore[eventName] ? this.#listenerStore[eventName] : [];
+        return this._listenerStore[eventName] ? this._listenerStore[eventName] : [];
     }
 
     prependListener(eventName, listener) {
@@ -104,7 +102,7 @@ class EventEmitter {
     }
 
     getMaxListeners() {
-        return this.#maxListenerCount;
+        return this._maxListenerCount;
     }
 
     setMaxListeners(n) {
@@ -112,18 +110,18 @@ class EventEmitter {
             throw new Error(`The value of "n" is out of range. It must be a non-negative number. Received '${n}'`);
         }
 
-        this.#maxListenerCount = n;
+        this._maxListenerCount = n;
 
         return this;
     }
 
     removeAllListeners(eventName) {
         if (!eventName) {
-            Object.keys(this.#listenerStore).forEach(_eventName => {
-                this.#listenerStore[_eventName] = [];
+            Object.keys(this._listenerStore).forEach(_eventName => {
+                this._listenerStore[_eventName] = [];
             });
         } else {
-            this.#listenerStore[eventName] = [];
+            this._listenerStore[eventName] = [];
         }
 
         return this;

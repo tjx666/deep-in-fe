@@ -4,7 +4,7 @@
 
 1. [实现一个完全符合 Promise A+ 规范的 MyPromise](https://github.com/tjx666/deep-in-fe/blob/master/src/promise/MyPromise.js) ✔
 2. [模拟 async/await 的工具 co](https://github.com/tjx666/deep-in-fe/blob/master/src/co/co.js) ✔
-3. EventEmitter ✔
+3. [实现 node EventEmitter](https://github.com/tjx666/deep-in-fe/blob/master/src/EventEmitter/EventEmitter.js) ✔
 4. 类型检测
    - 手写 instanceOf ✔
 5. new 操作符 ✔
