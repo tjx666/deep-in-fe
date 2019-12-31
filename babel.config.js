@@ -11,7 +11,12 @@ module.exports = function(api) {
         ],
         'power-assert',
     ];
-    const plugins = ['@babel/plugin-transform-runtime', '@babel/plugin-proposal-class-properties'];
+
+    const plugins = [
+        '@babel/plugin-transform-runtime',
+        '@babel/plugin-proposal-class-properties',
+        '@babel/helper-create-class-features-plugin',
+    ];
 
     return {
         presets,
