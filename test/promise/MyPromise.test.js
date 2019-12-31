@@ -32,6 +32,15 @@ describe('#MyPromise', () => {
             await Promise.race([addOne(1), addOne(3), addOne(10)]);
             assert(completedCount === 1);
         });
+
+        it('race reject', async () => {
+            try {
+                // eslint-disable-next-line prefer-promise-reject-errors
+                await Promise.race([Promise.reject(1), Promise.reject(2), Promise.reject(3)]);
+            } catch (err) {
+                assert(err[2] === 3);
+            }
+        });
     });
 
     describe('finally', () => {

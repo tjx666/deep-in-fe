@@ -80,13 +80,21 @@ describe('#EventEmitter', () => {
         assert(flag === 28);
     });
 
-    it('#listenerCount', () => {
+    it('#test listenerCount', () => {
+        eventName = 'test listenerCount';
+        const listener = () => {};
+
         assert(e.getMaxListeners() === 10);
+
         e.setMaxListeners(0);
         assert(e.getMaxListeners() === 0);
         assert.throws(() => {
             e.setMaxListeners(-1);
         });
+
+        e.setMaxListeners(1);
+        e.addListener(listener);
+        assert.doesNotThrow(() => e.addListener(listener));
     });
 
     it('#test listeners', () => {
@@ -95,8 +103,9 @@ describe('#EventEmitter', () => {
 
         e.addListener(eventName, listener);
         e.once(eventName, listener);
+        e.removeListener(eventName);
 
-        assert(e.listeners(eventName).length === 2);
+        assert(e.listeners(eventName).length === 1);
     });
 
     it('#test rawListeners', () => {
