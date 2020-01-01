@@ -1,4 +1,4 @@
-const isObj = require('../typeCheck/isObject');
+const isObject = require('../typeCheck/isObject');
 
 class MyPromise {
     static states = Object.freeze({
@@ -76,7 +76,7 @@ class MyPromise {
             return;
         }
 
-        if (isObj(x)) {
+        if (isObject(x)) {
             let resolvedOrRejected = false;
 
             // resolvePromise, rejectPromise 都是只能被调用一次
