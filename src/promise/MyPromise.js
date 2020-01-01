@@ -1,9 +1,18 @@
+const isObj = require('../typeCheck/isObject');
+
 class MyPromise {
     static states = Object.freeze({
         PENDING: Symbol('Promise(pending)'), // 初始状态
         FULFILLED: Symbol('Promise(fulfilled)'), // 成功执行
         REJECTED: Symbol('Promise(rejected)'), // 执行出错
     });
+
+    // 默认值
+    state = MyPromise.states.PENDING;
+    value = null;
+    reason = null;
+    onFulfilledCallbacks = [];
+    onRejectedCallbacks = [];
 
     // promises-aplus-tests 测试用的
     static resolved = MyPromise.resolve;
@@ -59,7 +68,7 @@ class MyPromise {
         });
     }
 
-    // 处理 promise.then 的返回值
+    // 处理 then 回调函数的返回值
     static resolvePromise(promise2, x, resolve, reject) {
         // 循环链检测
         if (promise2 === x) {
@@ -67,8 +76,7 @@ class MyPromise {
             return;
         }
 
-        if (typeof x === 'function' || (typeof x === 'object' && x !== null)) {
-            // 如果 then 是函数
+        if (isObj(x)) {
             let resolvedOrRejected = false;
 
             // resolvePromise, rejectPromise 都是只能被调用一次
@@ -99,8 +107,8 @@ class MyPromise {
                 } catch (error) {
                     // 如果没处理过异常就 reject(error)，处理过即调用过 resolvePromise, rejectPromise 就啥都不干
                     if (!resolvedOrRejected) {
-                        resolvedOrRejected = true;
                         reject(error);
+                        resolvedOrRejected = true;
                     }
                 }
             } else {
@@ -110,13 +118,6 @@ class MyPromise {
             resolve(x);
         }
     }
-
-    // 默认值
-    state = MyPromise.states.PENDING;
-    value = null;
-    reason = null;
-    onFulfilledCallbacks = [];
-    onRejectedCallbacks = [];
 
     /**
      * Promise 构造器
@@ -132,7 +133,6 @@ class MyPromise {
         this.onFulfilledCallbacks.push(value => {
             // 默认的回调也要检查是否循环链
             if (value === this) throw new TypeError('Chaining cycle detected for promise #<Promise>');
-
             return value;
         });
 
@@ -140,10 +140,10 @@ class MyPromise {
             // 如果没有 cache 抛 TypeError 和报警告
             if (reason === this) throw new TypeError('Chaining cycle detected for promise #<Promise>');
 
-            // console.error(`UnhandledPromiseRejectionWarning: ${reason}`);
-            // console.error(
-            //     `UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch().`
-            // );
+            console.error(`UnhandledPromiseRejectionWarning: ${reason}`);
+            console.error(
+                `UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch().`
+            );
         });
 
         const resolve = value => {
@@ -256,4 +256,4 @@ class MyPromise {
     }
 }
 
-module.exports = MyPromise;
+module.exports = MyPromise.default = module.MyPromise = MyPromise;
