@@ -118,4 +118,4 @@ function isObject(obj) {
 }
 
 // 兼容 esm 以及解构赋值
-module.exports = co.default = co.co = co;
+module.exports = co;

@@ -9,7 +9,7 @@
     "scripts": {
         "test": "mocha",
         "coverage": "nyc --reporter=lcov yarn test && codecov",
-        "coverage-local": "mocha --reporter mochawesome",
+        "test-report": "mocha --reporter mochawesome",
         "lint": "eslint -c .eslintrc --ext .js ./{src,test}/**/*.js",
         "clean": "rimraf -rf ./.nyc_output ./coverage ./mochawesome-report"
     },

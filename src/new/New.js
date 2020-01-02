@@ -1,4 +1,4 @@
-const isObject = require('../typeCheck/isObject');
+const isObject = require('../is/isObject');
 
 function New(constructor, ...args) {
     if (typeof constructor !== 'function') throw new TypeError(`${constructor} is not a constructor`);
@@ -9,4 +9,4 @@ function New(constructor, ...args) {
     return isObject(result) ? result : target;
 }
 
-module.exports = New.default = New.New = New;
+module.exports = New;

@@ -1,4 +1,4 @@
-const isObject = require('../typeCheck/isObject');
+const isObject = require('../is/isObject');
 
 function instanceOf(obj, constructor) {
     if (!isObject(constructor)) {
@@ -10,4 +10,4 @@ function instanceOf(obj, constructor) {
     return constructor.prototype.isPrototypeOf(obj);
 }
 
-module.exports = instanceOf.default = instanceOf.instanceOf = instanceOf;
+module.exports = instanceOf;

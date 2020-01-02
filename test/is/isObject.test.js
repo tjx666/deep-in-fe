@@ -1,5 +1,5 @@
 const assert = require('assert');
-const isObject = require('../../src/typeCheck/isObject');
+const isObject = require('../../src/is/isObject');
 
 describe('#isObject', () => {
     it(`#isObject({}) should return true`, () => {

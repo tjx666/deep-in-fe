@@ -1,4 +1,4 @@
-const isObject = require('../typeCheck/isObject');
+const isObject = require('../is/isObject');
 
 class MyPromise {
     static states = Object.freeze({
@@ -256,4 +256,4 @@ class MyPromise {
     }
 }
 
-module.exports = MyPromise.default = module.MyPromise = MyPromise;
+module.exports = MyPromise;

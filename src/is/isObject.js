@@ -3,4 +3,4 @@ function isObject(value) {
     return value !== null && (type === 'object' || type === 'function');
 }
 
-module.exports = isObject.default = isObject.isObject = isObject;
+module.exports = isObject;

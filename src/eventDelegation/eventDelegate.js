@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 const eventDelegate = (parentSelector, targetSelector, events, callback) => {
     const delegateCallback = (event, ...args) => {
         let { target } = event;
