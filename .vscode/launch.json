@@ -14,7 +14,20 @@
             "program": "${file}"
         },
         {
-            "name": "test-all",
+            "name": "dev-ts",
+            "type": "node",
+            "request": "launch",
+            "skipFiles": ["<node_internals>/**"],
+            "runtimeArgs": ["-r", "ts-node/register"],
+            "stopOnEntry": false,
+            "internalConsoleOptions": "openOnSessionStart",
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "program": "${file}"
+        },
+        {
+            "name": "test",
             "type": "node",
             "request": "launch",
             "skipFiles": ["<node_internals>/**"],
