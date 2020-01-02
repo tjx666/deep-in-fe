@@ -10,6 +10,7 @@ module.exports = function(api) {
             },
         ],
         'power-assert',
+        '@babel/preset-typescript',
     ];
 
     const plugins = ['@babel/plugin-transform-runtime', '@babel/plugin-proposal-class-properties'];
