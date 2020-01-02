@@ -16,7 +16,7 @@ var notCachedResult = {
 assert.deepEqual(requireDir('./noCache', { noCache: false }), cachedResult);
 
 var promiseFileModification = new Promise(function(resolve, reject) {
-    fs.writeFile('test/noCache/a.js', "module.exports = 'c';", 'ascii', function(error) {
+    fs.writeFile('test/utils/requireDir/noCache/a.js', "module.exports = 'c';", 'ascii', function(error) {
         if (error) {
             reject(error);
         } else {
@@ -35,7 +35,7 @@ promiseFileModification.then(
 
         console.log('noCache tests passed.');
 
-        fs.writeFile('test/noCache/a.js', "module.exports = 'a';", 'ascii', function(error) {
+        fs.writeFile('test/utils/requireDir/noCache/a.js', "module.exports = 'a';", 'ascii', function(error) {
             if (error) {
                 console.error('noCache tests, issue to reset test.');
                 console.error(error);

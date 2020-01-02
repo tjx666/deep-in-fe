@@ -27,7 +27,6 @@
             "git add"
         ]
     },
-    "dependencies": {},
     "devDependencies": {
         "@babel/core": "^7.7.7",
         "@babel/plugin-proposal-class-properties": "^7.7.4",
@@ -55,7 +54,6 @@
         "prettier": "^1.18.2",
         "promises-aplus-tests": "^2.1.2",
         "rimraf": "^3.0.0",
-        "ts-node": "^8.5.4",
         "typescript": "^3.7.4"
     }
 }
