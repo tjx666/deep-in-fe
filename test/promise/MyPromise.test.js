@@ -2,6 +2,19 @@ const assert = require('assert');
 const Promise = require('../../src/promise/MyPromise');
 
 describe('#MyPromise', () => {
+    it('should throw Error when executor is not function', () => {
+        assert.throws(() => {
+            // eslint-disable-next-line no-new
+            new Promise(123);
+        });
+    });
+
+    it('should be reject when throw Error is executor', done => {
+        new Promise(() => {
+            throw new Error();
+        }).catch(() => done());
+    });
+
     describe('#Promise.all', () => {
         it('addOne three times completedCount === 3', async () => {
             let completedCount = 0;
