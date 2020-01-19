@@ -2,8 +2,6 @@
     "compilerOptions": {
         "module": "commonjs",
         "target": "ESNext",
-        "removeComments": true,
-        "sourceMap": true,
         "isolatedModules": true,
 
         "strict": true,
@@ -21,5 +19,6 @@
 
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true
-    }
+    },
+    "include": ["src", "test"]
 }

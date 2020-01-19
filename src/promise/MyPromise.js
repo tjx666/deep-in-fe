@@ -1,20 +1,7 @@
 const isObject = require('../is/isObject');
 
 class MyPromise {
-    static states = Object.freeze({
-        PENDING: Symbol('Promise(pending)'), // 初始状态
-        FULFILLED: Symbol('Promise(fulfilled)'), // 成功执行
-        REJECTED: Symbol('Promise(rejected)'), // 执行出错
-    });
-
-    // 默认值
-    state = MyPromise.states.PENDING;
-    value = null;
-    reason = null;
-    onFulfilledCallbacks = [];
-    onRejectedCallbacks = [];
-
-    // promises-aplus-tests 测试用的
+    // promises-aplus-tests 库测试用的
     static resolved = MyPromise.resolve;
     static rejected = MyPromise.reject;
     static deferred() {
@@ -22,6 +9,12 @@ class MyPromise {
         dfd.promise = new MyPromise((resolve, reject) => Object.assign(dfd, { resolve, reject }));
         return dfd;
     }
+
+    static states = Object.freeze({
+        PENDING: Symbol('Promise-pending'), // 初始状态
+        FULFILLED: Symbol('Promise-fulfilled'), // 成功执行后的状态
+        REJECTED: Symbol('Promise-rejected'), // 执行出错的状态
+    });
 
     // 返回一个 resolve(value) 的新 Promise 即可
     static resolve(valve) {
@@ -125,6 +118,13 @@ class MyPromise {
      * @param {(resolve: (value) => void, reject: (reason) => void) => void} executor
      */
     constructor(executor) {
+        // 默认值
+        this.state = MyPromise.states.PENDING;
+        this.value = null;
+        this.reason = null;
+        this.onFulfilledCallbacks = [];
+        this.onRejectedCallbacks = [];
+
         // executor 必须是函数类型
         if (typeof executor !== 'function') {
             throw new TypeError(`Promise resolver ${executor} is not a function`);

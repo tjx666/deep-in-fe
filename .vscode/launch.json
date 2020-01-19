@@ -14,30 +14,33 @@
             "program": "${file}"
         },
         {
-            "name": "dev-ts",
-            "type": "node",
-            "request": "launch",
-            "skipFiles": ["<node_internals>/**"],
-            "runtimeArgs": ["-r", "ts-node/register"],
-            "stopOnEntry": false,
-            "internalConsoleOptions": "openOnSessionStart",
-            "env": {
-                "NODE_ENV": "development"
-            },
-            "program": "${file}"
-        },
-        {
-            "name": "test",
+            "name": "test-debug",
             "type": "node",
             "request": "launch",
             "skipFiles": ["<node_internals>/**"],
             "stopOnEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "env": {
-                "NODE_ENV": "test"
+                "NODE_ENV": "test",
+                "VSCODE_TEST": "1"
             },
             "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
-            "args": ["--timeout", "999999", "${workspaceFolder}/test"],
+            "args": ["--timeout", "999999", "${file}"],
+            "sourceMaps": true
+        },
+        {
+            "name": "test-all",
+            "type": "node",
+            "request": "launch",
+            "skipFiles": ["<node_internals>/**"],
+            "stopOnEntry": false,
+            "internalConsoleOptions": "openOnSessionStart",
+            "env": {
+                "NODE_ENV": "test",
+                "VSCODE_TEST": "1"
+            },
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "args": ["${workspaceFolder}/test"],
             "sourceMaps": true
         },
         {
@@ -48,10 +51,11 @@
             "stopOnEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "env": {
-                "NODE_ENV": "test"
+                "NODE_ENV": "test",
+                "VSCODE_TEST": "1"
             },
             "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
-            "args": ["--timeout", "999999", "${file}"],
+            "args": ["${file}"],
             "sourceMaps": true
         }
     ]

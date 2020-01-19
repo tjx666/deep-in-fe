@@ -1,9 +1,6 @@
-/* eslint-disable valid-typeof */
-const isObj = obj =>
-    (typeof obj === 'object' && typeof obj !== null) ||
-    typeof obj === 'function';
+const isObj = require('../is/isObject');
 
-const deepClone = (obj, hasTravelMap = new WeakMap()) => {
+function cloneDeep(obj, hasTravelMap = new WeakMap()) {
     if (!isObj(obj)) return obj;
     let clonedObj;
     const Constructor = obj.constructor;
@@ -24,23 +21,10 @@ const deepClone = (obj, hasTravelMap = new WeakMap()) => {
     }
 
     for (const [key, value] of Object.entries(obj)) {
-        clonedObj[key] = isObj(value) ? deepClone(value) : value;
+        clonedObj[key] = isObj(value) ? cloneDeep(value) : value;
     }
 
     return clonedObj;
-};
+}
 
-const testObj = {
-    num: 123,
-    obj: {
-        name: 'ly',
-    },
-    date: new Date(),
-    func: () => console.log('call func...'),
-    regExp: /\d{3}/,
-    array: [1, 2, 3],
-};
-
-const clonedObj = deepClone(testObj);
-console.log(testObj);
-console.log(clonedObj);
+module.exports = cloneDeep;

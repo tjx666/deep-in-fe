@@ -117,5 +117,4 @@ function isObject(obj) {
     return obj && obj.constructor === Object;
 }
 
-// 兼容 esm 以及解构赋值
 module.exports = co;

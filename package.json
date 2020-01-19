@@ -10,8 +10,8 @@
         "test": "mocha",
         "coverage": "nyc --reporter=lcov yarn test && codecov",
         "test-report": "mocha --reporter mochawesome",
-        "lint": "eslint -c .eslintrc --ext .js ./{src,test}/**/*.js",
-        "clean": "rimraf -rf ./.nyc_output ./coverage ./mochawesome-report"
+        "lint": "eslint -c .eslintrc --ext .js,.ts {src,test}/**/*.{js,ts}",
+        "clean": "rimraf -rf .nyc_output coverage mochawesome-report"
     },
     "husky": {
         "hooks": {
@@ -19,41 +19,41 @@
         }
     },
     "lint-staged": {
-        "{src,test}/**/*.js": [
+        "{src,test}/**/*.{js,ts}": [
             "eslint -c .eslintrc"
         ],
-        "**/*.{js,md}": [
+        "**/*.{js,ts,md}": [
             "prettier --write",
             "git add"
         ]
     },
     "devDependencies": {
-        "@babel/core": "^7.7.7",
-        "@babel/plugin-proposal-class-properties": "^7.7.4",
-        "@babel/plugin-transform-runtime": "^7.7.6",
-        "@babel/preset-env": "^7.7.7",
-        "@babel/preset-typescript": "^7.7.7",
-        "@babel/register": "^7.7.7",
-        "@babel/runtime": "^7.7.7",
+        "@babel/core": "^7.8.3",
+        "@babel/plugin-proposal-class-properties": "^7.8.3",
+        "@babel/plugin-transform-runtime": "^7.8.3",
+        "@babel/preset-env": "^7.8.3",
+        "@babel/preset-typescript": "^7.8.3",
+        "@babel/register": "^7.8.3",
+        "@babel/runtime": "^7.8.3",
         "babel-eslint": "^10.0.3",
         "babel-preset-power-assert": "^3.0.0",
-        "co": "^4.6.0",
         "codecov": "^3.5.0",
-        "core-js": "^3.6.1",
+        "core-js": "^3.6.4",
         "eslint": "^6.8.0",
         "eslint-config-airbnb-base": "^14.0.0",
         "eslint-config-prettier": "^6.9.0",
-        "eslint-plugin-import": "^2.19.1",
+        "eslint-plugin-import": "^2.20.0",
         "eslint-plugin-prettier": "^3.1.2",
-        "husky": "^3.0.4",
+        "husky": "^4.0.10",
         "lint-staged": "^9.2.5",
-        "mocha": "^6.1.3",
+        "mocha": "^7.0.0",
         "mochawesome": "^4.1.0",
         "nyc": "^15.0.0",
         "power-assert": "^1.6.1",
         "prettier": "^1.18.2",
         "promises-aplus-tests": "^2.1.2",
         "rimraf": "^3.0.0",
-        "typescript": "^3.7.4"
-    }
+        "typescript": "^3.7.5"
+    },
+    "dependencies": {}
 }
