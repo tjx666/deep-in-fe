@@ -9,10 +9,8 @@ const createStore = reducer => {
         const unsubscribe = () => {
             if (isUnsubscribed) return;
 
-            const index = listeners.findIndex(
-                eleListener => eleListener === listener
-            );
-            ~index && listeners.splice(index, 1);
+            const index = listeners.findIndex(eleListener => eleListener === listener);
+            if (~index) listeners.splice(index, 1);
             isUnsubscribed = true;
         };
         return unsubscribe;

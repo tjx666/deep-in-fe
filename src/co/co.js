@@ -9,7 +9,8 @@
 function co(generatorFn, ...args) {
     return new Promise((resolve, reject) => {
         // 获取生成器对象
-        const generatorObj = typeof generatorFn === 'function' ? generatorFn.apply(this, args) : generatorFn;
+        const generatorObj =
+            typeof generatorFn === 'function' ? generatorFn.apply(this, args) : generatorFn;
         // 如果返回不是生成器对象就直接 resolve
         if (!isGenerator(generatorObj)) return resolve(generatorFn);
 
@@ -46,8 +47,8 @@ function co(generatorFn, ...args) {
             return onRejected(
                 new TypeError(
                     // prettier-ignore
-                    `You may only yield a function, promise, generator, array, or object, but the following object was passed: "${String(result.value)}"`
-                )
+                    `You may only yield a function, promise, generator, array, or object, but the following object was passed: "${String(result.value)}"`,
+                ),
             );
         };
 
@@ -76,7 +77,7 @@ function objectToPromise(obj) {
             promises.push(
                 promise.then(value => {
                     results[key] = value;
-                })
+                }),
             );
         } else {
             results[key] = value;
@@ -108,7 +109,8 @@ function isGeneratorFunction(obj) {
     const { constructor } = obj;
 
     if (!constructor) return false;
-    if (constructor.name === 'GeneratorFunction' || constructor.displayName === 'GeneratorFunction') return true;
+    if (constructor.name === 'GeneratorFunction' || constructor.displayName === 'GeneratorFunction')
+        return true;
 
     return isGenerator(constructor.prototype);
 }

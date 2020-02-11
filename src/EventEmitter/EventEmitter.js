@@ -22,7 +22,7 @@ class EventEmitter {
         // 添加的事件超出最大事件数会报警告
         if (currentListenersCount > (this._maxListenerCount || Infinity)) {
             console.warn(
-                `You had add ${currentListenersCount}listeners, more than the max listeners count: ${this._maxListenerCount}`
+                `You had add ${currentListenersCount}listeners, more than the max listeners count: ${this._maxListenerCount}`,
             );
         }
 
@@ -39,10 +39,10 @@ class EventEmitter {
         if (!this._listenerStore[eventName]) return;
 
         const index = this._listenerStore[eventName].findIndex(
-            existListener => existListener === listener || existListener.listener === listener
+            existListener => existListener === listener || existListener.listener === listener,
         );
         // 小技巧：只有当 index 等于 -1 的时候， ~index 才等于 0, 转换 bool 值为假。因此，我们可以使用 ~index 表示 index 不等于 -1
-        ~index && this._listenerStore[eventName].splice(index, 1);
+        if (~index) this._listenerStore[eventName].splice(index, 1);
 
         return this;
     }
@@ -79,7 +79,9 @@ class EventEmitter {
 
     listeners(eventName) {
         return this._listenerStore[eventName]
-            ? this._listenerStore[eventName].map(listener => (listener.listener ? listener.listener : listener))
+            ? this._listenerStore[eventName].map(listener =>
+                  listener.listener ? listener.listener : listener,
+              )
             : [];
     }
 
@@ -109,7 +111,9 @@ class EventEmitter {
 
     setMaxListeners(n) {
         if (typeof n !== 'number' || n < 0) {
-            throw new Error(`The value of "n" is out of range. It must be a non-negative number. Received '${n}'`);
+            throw new Error(
+                `The value of "n" is out of range. It must be a non-negative number. Received '${n}'`,
+            );
         }
 
         this._maxListenerCount = n;

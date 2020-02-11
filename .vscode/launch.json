@@ -22,7 +22,8 @@
             "internalConsoleOptions": "openOnSessionStart",
             "env": {
                 "NODE_ENV": "test",
-                "VSCODE_TEST": "1"
+                "VSCODE_TEST": "1",
+                "VSCODE_DEBUG": "1"
             },
             "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
             "args": ["--timeout", "999999", "${file}"],

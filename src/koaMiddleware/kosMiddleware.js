@@ -10,13 +10,11 @@ class Koa {
     applyMiddlewares() {
         let index = 0;
         const next = async () => {
-            ++index < this.middlewares.length &&
-                (await this.middlewares[index](next));
+            if (++index < this.middlewares.length) await this.middlewares[index](next);
         };
 
         (async function() {
-            index < this.middlewares.length &&
-                (await this.middlewares[index](next));
+            if (index < this.middlewares.length) await this.middlewares[index](next);
         })();
     }
 }
