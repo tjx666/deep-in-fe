@@ -1,5 +1,4 @@
 const OFF = 0;
-const WARN = 1;
 
 module.exports = {
     env: {
@@ -20,11 +19,14 @@ module.exports = {
         'consistent-return': OFF,
         'func-names': OFF,
         'global-require': OFF,
+        'import/newline-after-import': OFF,
+        'import/no-dynamic-require': OFF,
         'lines-between-class-members': OFF,
         'max-classes-per-file': OFF,
         'no-bitwise': OFF,
         'no-caller': OFF,
         'no-console': OFF,
+        'no-empty': OFF,
         'no-eval': OFF,
         'no-extend-native': OFF,
         'no-multi-assign': OFF,
@@ -37,8 +39,6 @@ module.exports = {
         'no-restricted-syntax': OFF,
         'no-shadow': OFF,
         'no-underscore-dangle': OFF,
-        'no-unused-vars': WARN,
-        'import/newline-after-import': OFF,
-        'import/no-dynamic-require': OFF,
+        'no-unused-vars': OFF,
     },
 };

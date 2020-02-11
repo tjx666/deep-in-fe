@@ -1,3 +1,4 @@
+/* eslint-disable prefer-promise-reject-errors */
 const assert = require('assert');
 const Promise = require('../../src/promise/MyPromise');
 
@@ -38,12 +39,12 @@ describe('#MyPromise', () => {
                     setTimeout(() => {
                         completedCount++;
                         resolve();
-                    }, 100 * milliseconds);
+                    }, 1000 * milliseconds);
                 });
             };
 
             await Promise.race([addOne(1), addOne(3), addOne(10)]);
-            assert(completedCount === 1);
+            assert.equal(completedCount, 1);
         });
 
         it('race reject', async () => {
@@ -51,7 +52,7 @@ describe('#MyPromise', () => {
                 // eslint-disable-next-line prefer-promise-reject-errors
                 await Promise.race([Promise.reject(1), Promise.reject(2), Promise.reject(3)]);
             } catch (err) {
-                assert(err[2] === 3);
+                assert(err === 1);
             }
         });
     });
@@ -65,6 +66,19 @@ describe('#MyPromise', () => {
             });
 
             promise.finally(() => done());
+        });
+    });
+
+    describe('#allSettled', () => {
+        it('simple test allSettled', async () => {
+            const promise1 = Promise.reject(0);
+            const promise2 = Promise.resolve(1);
+            await Promise.allSettled([promise1, promise2]).then(results => {
+                assert.deepEqual(results, [
+                    { status: 'rejected', reason: 0 },
+                    { status: 'fulfilled', value: 1 },
+                ]);
+            });
         });
     });
 });
