@@ -1,4 +1,5 @@
 const OFF = 0;
+const ERROR = 2;
 
 module.exports = {
     env: {
@@ -8,13 +9,26 @@ module.exports = {
         node: true,
         mocha: true,
     },
-    extends: ['airbnb-base', 'prettier'],
+    extends: [
+        'airbnb-base',
+        'plugin:eslint-comments/recommended',
+        'plugin:node/recommended-script',
+        'plugin:promise/recommended',
+        'plugin:mocha/recommended',
+        'prettier',
+    ],
     globals: {
         Atomics: 'readonly',
         SharedArrayBuffer: 'readonly',
     },
     parser: 'babel-eslint',
     rules: {
+        'eslint-comments/disable-enable-pair': [ERROR, { allowWholeFile: true }],
+
+        'mocha/no-mocha-arrows': OFF,
+
+        'promise/always-return': OFF,
+
         'array-callback-return': OFF,
         'consistent-return': OFF,
         'func-names': OFF,

@@ -1,8 +1,9 @@
-/* eslint-disable prefer-promise-reject-errors */
-const assert = require('assert');
-const Promise = require('../../src/promise/MyPromise');
+/* eslint-disable prefer-promise-reject-errors, promise/catch-or-return, promise/no-callback-in-promise */
 
-describe('#MyPromise', () => {
+const assert = require('assert');
+const Promise = require('../../src/promise/Promise');
+
+describe('#Promise', () => {
     it('should throw Error when executor is not function', () => {
         assert.throws(() => {
             // eslint-disable-next-line no-new
@@ -10,55 +11,61 @@ describe('#MyPromise', () => {
         });
     });
 
-    it('should be reject when throw Error is executor', done => {
-        new Promise(() => {
-            throw new Error();
-        }).catch(() => done());
+    it('should be reject when throw Error in executor', async () => {
+        const error = new Error(6);
+        const promise = new Promise((resolve, reject) => {
+            setTimeout(() => reject(error));
+        });
+
+        promise.catch(() => console.log(123));
+        assert.rejects(promise, error);
     });
 
-    describe('#Promise.all', () => {
-        it('addOne three times completedCount === 3', async () => {
-            let completedCount = 0;
-            const addOne = () => {
+    describe('#all', () => {
+        it('should count equals 6 after add', async () => {
+            let count = 0;
+            const add = amount => {
                 return new Promise(resolve => {
-                    completedCount++;
-                    resolve();
+                    setTimeout(() => {
+                        count += amount;
+                        resolve();
+                    });
                 });
             };
 
-            await Promise.all([addOne(), addOne(), addOne()]);
-            assert(completedCount === 3);
+            await Promise.all([add(1), add(2), add(3)]);
+            assert.strictEqual(count, 6);
         });
     });
 
-    describe('#Promise.race', () => {
-        it('addOne one time', async () => {
-            let completedCount = 0;
+    describe('#race', () => {
+        it('should only add one time', async () => {
+            let count = 0;
             const addOne = milliseconds => {
                 return new Promise(resolve => {
                     setTimeout(() => {
-                        completedCount++;
+                        count++;
                         resolve();
                     }, 1000 * milliseconds);
                 });
             };
 
             await Promise.race([addOne(1), addOne(3), addOne(10)]);
-            assert.equal(completedCount, 1);
+            assert.strictEqual(count, 1);
         });
 
-        it('race reject', async () => {
+        it(`should race reject value be the first rejected promise's`, async () => {
             try {
-                // eslint-disable-next-line prefer-promise-reject-errors
                 await Promise.race([Promise.reject(1), Promise.reject(2), Promise.reject(3)]);
+                assert.fail();
             } catch (err) {
-                assert(err === 1);
+                assert.strictEqual(err, 1);
             }
         });
     });
 
-    describe('finally', () => {
-        it('onFinally will be call when reject', done => {
+    describe('#finally', () => {
+        it('should onFinally will be call even when reject', done => {
             const promise = new Promise((resolve, reject) => {
                 setTimeout(() => {
                     reject();
@@ -74,7 +81,7 @@ describe('#MyPromise', () => {
             const promise1 = Promise.reject(0);
             const promise2 = Promise.resolve(1);
             await Promise.allSettled([promise1, promise2]).then(results => {
-                assert.deepEqual(results, [
+                assert.deepStrictEqual(results, [
                     { status: 'rejected', reason: 0 },
                     { status: 'fulfilled', value: 1 },
                 ]);

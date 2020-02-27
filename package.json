@@ -4,11 +4,16 @@
     "description": "Store my code to explore the javascript mystery",
     "private": true,
     "main": "index.js",
+    "type": "commonjs",
+    "engines": {
+        "node": "12.16.1"
+    },
     "author": "YuTengjing",
     "license": "MIT",
     "scripts": {
         "test": "mocha",
-        "coverage": "nyc --reporter=lcov yarn test && codecov",
+        "coverage": "nyc --reporter=lcov yarn test",
+        "coverage-upload": "nyc --reporter=lcov yarn test && codecov",
         "test-report": "mocha --reporter mochawesome",
         "lint": "eslint -c .eslintrc.js --ext .js {src,test}/**/*.js",
         "clean": "rimraf -rf .nyc_output coverage mochawesome-report"
@@ -26,19 +31,22 @@
             "prettier --write"
         ]
     },
-    "dependencies": {},
     "devDependencies": {
-        "babel-eslint": "^10.0.3",
+        "babel-eslint": "^10.1.0",
         "codecov": "^3.6.5",
         "eslint": "^6.8.0",
         "eslint-config-airbnb-base": "^14.0.0",
         "eslint-config-prettier": "^6.10.0",
+        "eslint-plugin-eslint-comments": "^3.1.2",
         "eslint-plugin-import": "^2.20.1",
-        "husky": "^4.2.1",
+        "eslint-plugin-mocha": "^6.3.0",
+        "eslint-plugin-node": "^11.0.0",
+        "eslint-plugin-promise": "^4.2.1",
+        "husky": "^4.2.3",
         "intelli-espower-loader": "^1.0.1",
-        "lint-staged": "^10.0.7",
-        "mocha": "^7.0.1",
-        "mochawesome": "^4.1.0",
+        "lint-staged": "^10.0.8",
+        "mocha": "^7.1.0",
+        "mochawesome": "^5.0.0",
         "nyc": "^15.0.0",
         "power-assert": "^1.6.1",
         "prettier": "^1.18.2",
