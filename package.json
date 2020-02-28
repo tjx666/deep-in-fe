@@ -13,7 +13,6 @@
     "scripts": {
         "test": "mocha",
         "coverage": "nyc --reporter=lcov yarn test",
-        "coverage-upload": "nyc --reporter=lcov yarn test && codecov",
         "test-report": "mocha --reporter mochawesome",
         "lint": "eslint -c .eslintrc.js --ext .js {src,test}/**/*.js",
         "clean": "rimraf -rf .nyc_output coverage mochawesome-report"

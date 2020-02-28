@@ -1,9 +1,8 @@
 /* eslint-disable promise/catch-or-return */
-
 const isObject = require('../is/isObject');
 
 class Promise {
-    static _states = Object.freeze({
+    static states = Object.freeze({
         PENDING: Symbol('pending'), // 初始状态
         FULFILLED: Symbol('fulfilled'), // 成功执行后的状态
         REJECTED: Symbol('rejected'), // 执行出错的状态
@@ -16,7 +15,7 @@ class Promise {
     constructor(executor) {
         // 默认值
         // promise 状态
-        this.state = Promise._states.PENDING;
+        this.state = Promise.states.PENDING;
         // resolve 的值
         this.value = null;
         // reject 的值
@@ -70,8 +69,8 @@ class Promise {
 
         const resolve = value => {
             // 有可能用户在 executor 中多次调用 resolve 或者 reject
-            if (this.state === Promise._states.PENDING) {
-                this.state = Promise._states.FULFILLED;
+            if (this.state === Promise.states.PENDING) {
+                this.state = Promise.states.FULFILLED;
                 this.value = value;
 
                 // 使用 setTimeout 模拟 micro task
@@ -80,8 +79,8 @@ class Promise {
         };
 
         const reject = reason => {
-            if (this.state === Promise._states.PENDING) {
-                this.state = Promise._states.REJECTED;
+            if (this.state === Promise.states.PENDING) {
+                this.state = Promise.states.REJECTED;
                 this.reason = reason;
                 this.onRejectedCallbacks.forEach(cb => setTimeout(() => cb(reason)));
             }
@@ -119,12 +118,12 @@ class Promise {
         // 因为 then 中抛出异常会导致 Promise 状态从 fulfilled 变成 rejected
         // 但是 A+ 规范规定: Promise 状态一旦发生改变不能发生变化，所以我们采用返回新实例的方式来实现链式调用
         const promise2 = new Promise((resolve, reject) => {
-            if (this.state === Promise._states.PENDING) {
+            if (this.state === Promise.states.PENDING) {
                 // pending 就 push 回调
                 this.onFulfilledCallbacks.push(value => {
                     try {
                         const x = onfulfilled(value);
-                        Promise._resolvePromise(this, promise2, x, resolve, reject);
+                        Promise.resolvePromise(this, promise2, x, resolve, reject);
                     } catch (error) {
                         reject(error);
                     }
@@ -133,26 +132,26 @@ class Promise {
                 this.onRejectedCallbacks.push(reason => {
                     try {
                         const x = onrejected(reason);
-                        Promise._resolvePromise(this, promise2, x, resolve, reject);
+                        Promise.resolvePromise(this, promise2, x, resolve, reject);
                     } catch (error) {
                         reject(error);
                     }
                 });
-            } else if (this.state === Promise._states.FULFILLED) {
+            } else if (this.state === Promise.states.FULFILLED) {
                 // 已经改变状态就直接执行回调
                 setTimeout(() => {
                     try {
                         const x = onfulfilled(this.value);
-                        Promise._resolvePromise(this, promise2, x, resolve, reject);
+                        Promise.resolvePromise(this, promise2, x, resolve, reject);
                     } catch (error) {
                         reject(error);
                     }
                 }, 0);
-            } else if (this.state === Promise._states.REJECTED) {
+            } else if (this.state === Promise.states.REJECTED) {
                 setTimeout(() => {
                     try {
                         const x = onrejected(this.reason);
-                        Promise._resolvePromise(this, promise2, x, resolve, reject);
+                        Promise.resolvePromise(this, promise2, x, resolve, reject);
                     } catch (error) {
                         reject(error);
                     }
@@ -246,7 +245,7 @@ class Promise {
      * @param {Promise} promise2 新返回的 promise
      * @param {any} x then 返回值
      */
-    static _resolvePromise(promise, promise2, x, resolve, reject) {
+    static resolvePromise(promise, promise2, x, resolve, reject) {
         // 循环链检测
         if (promise !== x && promise2 === x) {
             reject(new TypeError('Chaining cycle detected for promise #<Promise></Promise>'));
@@ -260,7 +259,7 @@ class Promise {
             const resolvePromise = y => {
                 if (resolvedOrRejected) return;
                 resolvedOrRejected = true;
-                Promise._resolvePromise(promise, promise2, y, resolve, reject);
+                Promise.resolvePromise(promise, promise2, y, resolve, reject);
             };
 
             const rejectPromise = r => {

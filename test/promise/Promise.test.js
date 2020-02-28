@@ -1,5 +1,3 @@
-/* eslint-disable prefer-promise-reject-errors, promise/catch-or-return, promise/no-callback-in-promise */
-
 const assert = require('assert');
 const Promise = require('../../src/promise/Promise');
 
@@ -56,6 +54,7 @@ describe('#Promise', () => {
 
         it(`should race reject value be the first rejected promise's`, async () => {
             try {
+                // eslint-disable-next-line prefer-promise-reject-errors
                 await Promise.race([Promise.reject(1), Promise.reject(2), Promise.reject(3)]);
                 assert.fail();
             } catch (err) {
@@ -72,12 +71,14 @@ describe('#Promise', () => {
                 }, 100);
             });
 
+            // eslint-disable-next-line promise/catch-or-return
             promise.finally(() => done());
         });
     });
 
     describe('#allSettled', () => {
-        it('simple test allSettled', async () => {
+        it(`should return the right results`, async () => {
+            // eslint-disable-next-line prefer-promise-reject-errors
             const promise1 = Promise.reject(0);
             const promise2 = Promise.resolve(1);
             await Promise.allSettled([promise1, promise2]).then(results => {
