@@ -1,5 +1,10 @@
 /* eslint-disable promise/catch-or-return */
+const { types } = require('util');
 const isObject = require('../is/isObject');
+
+function isThenable(value) {
+    return !!(value && value.then);
+}
 
 class Promise {
     static states = Object.freeze({
@@ -28,11 +33,11 @@ class Promise {
         // const p = new Promise(() => {});
         // p.then(() => {});
         // p.then(() => {})
-        this.onFulfilledCallbacks = [];
+        this.onFulfilledMicroTasks = [];
         // executor 中 reject 时或者抛出错误时执行的回调
-        this.onRejectedCallbacks = [];
+        this.onRejectedMicroTasks = [];
 
-        this.onFulfilledCallbacks.push(value => {
+        this.onFulfilledMicroTasks.push(value => {
             // 默认的回调也要检查是否循环链，例如：
             // const p = new Promise((resolve, reject) => {
             //     setTimeout(() => {
@@ -44,7 +49,7 @@ class Promise {
             }
         });
 
-        this.onRejectedCallbacks.push(reason => {
+        this.onRejectedMicroTasks.push(reason => {
             if (reason === this) {
                 console.warn('Chaining cycle detected for promise #<Promise>');
                 // eslint-disable-next-line no-useless-return
@@ -54,12 +59,12 @@ class Promise {
             // 目前 node v12.16.1 和 chrome  80.0.3987.122 在没有 catch Promise 错误的情况下
             // 只会输出警告，不会影响后续代码的执行
             // 为了不影响我们 debug 这里先注释掉
-            // if (!this.caught) {
-            //     console.error(`UnhandledPromiseRejectionWarning: ${reason}`);
-            //     console.error(
-            //         `UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch().`,
-            //     );
-            // }
+            if (!this.caught) {
+                console.error(`UnhandledPromiseRejectionWarning: ${reason}`);
+                console.error(
+                    `UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch().`,
+                );
+            }
         });
 
         // executor 必须是函数类型
@@ -74,7 +79,7 @@ class Promise {
                 this.value = value;
 
                 // 使用 setTimeout 模拟 micro task
-                this.onFulfilledCallbacks.forEach(cb => setTimeout(() => cb(value)));
+                this.onFulfilledMicroTasks.forEach(microTask => setTimeout(() => microTask(value)));
             }
         };
 
@@ -82,7 +87,7 @@ class Promise {
             if (this.state === Promise.states.PENDING) {
                 this.state = Promise.states.REJECTED;
                 this.reason = reason;
-                this.onRejectedCallbacks.forEach(cb => setTimeout(() => cb(reason)));
+                this.onRejectedMicroTasks.forEach(microTask => setTimeout(() => microTask(reason)));
             }
         };
 
@@ -97,7 +102,6 @@ class Promise {
     }
 
     /**
-     *
      * @param {function} onfulfilled 在 executor 中调用 resolve(value) 后的回调
      * @param {function} onrejected 在 executor 中调用 reject(error) 或者抛出异常时的回调
      */
@@ -114,13 +118,14 @@ class Promise {
 
         // 链式调用一般就两种实现方式：
         // 1. 返回本身
-        // 2. 返回一个新对象
+        // 2. 返回一个新实例
         // 因为 then 中抛出异常会导致 Promise 状态从 fulfilled 变成 rejected
-        // 但是 A+ 规范规定: Promise 状态一旦发生改变不能发生变化，所以我们采用返回新实例的方式来实现链式调用
+        // 并且 Promise A+ 规范规定: Promise 状态一旦发生改变不能发生变化
+        // 所以我们采用返回新实例的方式来实现链式调用
         const promise2 = new Promise((resolve, reject) => {
             if (this.state === Promise.states.PENDING) {
                 // pending 就 push 回调
-                this.onFulfilledCallbacks.push(value => {
+                this.onFulfilledMicroTasks.push(value => {
                     try {
                         const x = onfulfilled(value);
                         Promise.resolvePromise(this, promise2, x, resolve, reject);
@@ -129,7 +134,7 @@ class Promise {
                     }
                 });
 
-                this.onRejectedCallbacks.push(reason => {
+                this.onRejectedMicroTasks.push(reason => {
                     try {
                         const x = onrejected(reason);
                         Promise.resolvePromise(this, promise2, x, resolve, reject);
@@ -162,92 +167,15 @@ class Promise {
         return promise2;
     };
 
-    // 第一个参数不传即可
-    catch(onrejected) {
-        this.then(null, onrejected);
-    }
-
-    // 两个回调都设置为 onFinally
-    finally(onFinally) {
-        this.then(onFinally, onFinally);
-    }
-
-    // 返回一个 resolve(value) 的新 Promise 即可
-    static resolve(valve) {
-        return new Promise(resolve => resolve(valve));
-    }
-
-    // 返回一个 reject(value) 的新 Promise 即可
-    static reject(reason) {
-        return new Promise((resolve, reject) => reject(reason));
-    }
-
-    static all(promises) {
-        const resultValues = [];
-        promises = Array.from(promises);
-
-        if (promises.length === 0) {
-            return Promise.resolve(resultValues);
-        }
-
-        return new Promise((resolve, reject) => {
-            promises.forEach(p => {
-                const isPromiseLike = p && p.then;
-                if (!isPromiseLike) {
-                    p = Promise.resolve(p);
-                }
-                p.then(
-                    value => {
-                        resultValues.push(value);
-                        if (resultValues.length === promises.length) {
-                            resolve(resultValues);
-                        }
-                    },
-                    err => reject(err),
-                );
-            });
-        });
-    }
-
-    // 结果为第一个出结果的 promise 的结果
-    static race(promises) {
-        promises = Array.from(promises);
-        return new Promise((resolve, reject) => {
-            promises.forEach(promise => {
-                promise.then(
-                    value => resolve(value),
-                    err => reject(err),
-                );
-            });
-        });
-    }
-
-    static allSettled(promises) {
-        promises = Array.from(promises);
-        return new Promise((resolve, reject) => {
-            const results = [];
-            promises.forEach(promise => {
-                promise
-                    .then(
-                        value => results.push({ status: 'fulfilled', value }),
-                        reason => results.push({ status: 'rejected', reason }),
-                    )
-                    .finally(() => {
-                        if (results.length === promises.length) resolve(results);
-                    });
-            });
-        });
-    }
-
     /**
      * 处理 then 回调函数的返回值
-     * @param {Promise} promise 调用 then 函数的那个 promise
+     * @param {Promise} self 调用 then 函数的那个 promise
      * @param {Promise} promise2 新返回的 promise
      * @param {any} x then 返回值
      */
-    static resolvePromise(promise, promise2, x, resolve, reject) {
-        // 循环链检测
-        if (promise !== x && promise2 === x) {
+    static resolvePromise(self, promise2, x, resolve, reject) {
+        if (self === x || promise2 === x) {
+            // console.warn('Chaining cycle detected for promise #<Promise></Promise>')
             reject(new TypeError('Chaining cycle detected for promise #<Promise></Promise>'));
             return;
         }
@@ -259,7 +187,7 @@ class Promise {
             const resolvePromise = y => {
                 if (resolvedOrRejected) return;
                 resolvedOrRejected = true;
-                Promise.resolvePromise(promise, promise2, y, resolve, reject);
+                Promise.resolvePromise(self, promise2, y, resolve, reject);
             };
 
             const rejectPromise = r => {
@@ -291,12 +219,114 @@ class Promise {
                 resolve(x);
             }
         } else {
+            // 假设对 promise p 进行两次 then，也就是 p.then().then()
+            // 为了让第二个 then 中的回调能正常执行，p.then() 返回的这个新的 promise 顺利执行的时候就必须 resole
             resolve(x);
         }
     }
 
+    // 第一个参数不传即可
+    catch(onrejected) {
+        this.then(undefined, onrejected);
+    }
+
+    // 两个回调都设置为 onFinally
+    finally(onFinally) {
+        this.then(onFinally, onFinally);
+    }
+
+    static resolve(value) {
+        // 如果 value 是 promise 就直接返回
+        if (types.isPromise(value)) {
+            return value;
+        }
+
+        // 不是 Promise 就返回新的 Promise
+        return new Promise((resolve, reject) => {
+            // 是 thenable 对象就追踪它的状态
+            if (isThenable(value)) {
+                value.then(
+                    value => resolve(value),
+                    reason => reject(reason),
+                );
+            } else {
+                // 直接 resolve
+                resolve(value);
+            }
+        });
+    }
+
+    // 返回一个 reject(reason) 的新 Promise 即可
+    static reject(reason) {
+        return new Promise((resolve, reject) => reject(reason));
+    }
+
+    static all(promises) {
+        const resultValues = [];
+        promises = Array.from(promises);
+
+        if (promises.length === 0) {
+            return Promise.resolve(resultValues);
+        }
+
+        return new Promise((resolve, reject) => {
+            promises.forEach(promise => {
+                if (!isThenable(promise)) {
+                    promise = Promise.resolve(promise);
+                }
+                promise.then(
+                    value => {
+                        resultValues.push(value);
+                        if (resultValues.length === promises.length) {
+                            resolve(resultValues);
+                        }
+                    },
+                    error => reject(error),
+                );
+            });
+        });
+    }
+
+    // 结果为第一个出结果的 promise 的结果
+    static race(promises) {
+        promises = Array.from(promises);
+        return new Promise((resolve, reject) => {
+            promises.forEach(promise => {
+                promise.then(
+                    value => resolve(value),
+                    error => reject(error),
+                );
+            });
+        });
+    }
+
+    // resolve 的 value 是和 promise 数组参数相同长度的对象
+    // 其中每个元素 resolve 了就返回 { status: 'fulfilled', value }
+    // reject 了就返回 { status: 'rejected', reason }
+    static allSettled(promises) {
+        promises = Array.from(promises);
+        return new Promise((resolve, reject) => {
+            const results = [];
+            promises.forEach(promise => {
+                if (!isThenable(promise)) {
+                    promise = Promise.resolve(promise);
+                }
+                promise
+                    .then(
+                        value => results.push({ status: 'fulfilled', value }),
+                        reason => results.push({ status: 'rejected', reason }),
+                    )
+                    .finally(() => {
+                        if (results.length === promises.length) resolve(results);
+                    });
+            });
+        });
+    }
+
     // promises-aplus-tests 库测试用的
-    static resolved = Promise.resolve;
+    static resolved = value => {
+        return new Promise(resolve => resolve(value));
+    };
     static rejected = Promise.reject;
     static deferred() {
         const dfd = {};

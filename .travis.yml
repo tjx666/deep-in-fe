@@ -5,6 +5,6 @@ cache:
 install:
     - yarn
 script:
-    - npx audit-ci -a 118 146 534
+    - npx audit-ci -m -a 118 146
     - yarn run coverage
     - npx codecov

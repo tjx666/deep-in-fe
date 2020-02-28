@@ -2,23 +2,6 @@ const assert = require('assert');
 const Promise = require('../../src/promise/Promise');
 
 describe('#Promise', () => {
-    it('should throw Error when executor is not function', () => {
-        assert.throws(() => {
-            // eslint-disable-next-line no-new
-            new Promise(123);
-        });
-    });
-
-    it('should be reject when throw Error in executor', async () => {
-        const error = new Error(6);
-        const promise = new Promise((resolve, reject) => {
-            setTimeout(() => reject(error));
-        });
-
-        promise.catch(() => console.log(123));
-        assert.rejects(promise, error);
-    });
-
     describe('#all', () => {
         it('should count equals 6 after add', async () => {
             let count = 0;
@@ -86,6 +69,40 @@ describe('#Promise', () => {
                     { status: 'rejected', reason: 0 },
                     { status: 'fulfilled', value: 1 },
                 ]);
+            });
+        });
+    });
+
+    describe('#some special conditions', () => {
+        it('should throw Error when executor is not function', () => {
+            assert.throws(() => {
+                // eslint-disable-next-line no-new
+                new Promise(123);
+            });
+        });
+
+        it('should be reject when throw Error in executor', async () => {
+            const error = new Error(6);
+            const promise = new Promise((resolve, reject) => {
+                setTimeout(() => reject(error));
+            });
+
+            assert.rejects(promise, error);
+        });
+
+        it('Chaining cycle', () => {
+            // 第一种循环链情况，resolve 自身那个 promise
+            const p1 = new Promise(resolve => {
+                setTimeout(() => resolve(p1));
+            });
+
+            // 第二种循环链情况，resolve 最开始的 promise
+            const p2 = new Promise(resolve => {
+                setTimeout(() => resolve(123));
+            });
+            p2.then(() => {
+                console.log(p2.caught);
+                return p2;
             });
         });
     });

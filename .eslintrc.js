@@ -28,6 +28,7 @@ module.exports = {
         'mocha/no-mocha-arrows': OFF,
 
         'promise/always-return': OFF,
+        'promise/catch-or-return': OFF,
 
         'array-callback-return': OFF,
         'consistent-return': OFF,
