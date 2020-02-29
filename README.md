@@ -8,7 +8,10 @@
 4. [instanceof 运算符原理](https://github.com/tjx666/deep-in-fe/tree/master/src/instanceof) ✔
 5. [new 运算符原理](https://github.com/tjx666/deep-in-fe/tree/master/src/new) ✔
 6. [JavaScript 类型检测](https://gitb.com/tjx666/deep-in-fe/tree/master/src/is) ✔
-7. reduce 实现 map 和 filter
+7. [强大的 reduce](https://gitb.com/tjx666/deep-in-fe/tree/master/src/powerfulReduce)
+   - reduce 实现 map ✔
+   - reduce 实现 filter ✔
+   - 解析 queryString ✔
 8. 防抖和节流
 9. [原型继承](https://github.com/tjx666/deep-in-fe/tree/master/src/prototypeExtends) ✔
 10. [事件委托](https://github.com/tjx666/deep-in-fe/tree/master/src/eventDelegation) ✔
