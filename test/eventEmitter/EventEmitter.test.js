@@ -11,7 +11,7 @@ describe('#EventEmitter', () => {
         flag = false;
     });
 
-    it('#test on', () => {
+    it('test on', () => {
         eventName = 'test on';
 
         e.on(eventName, () => {
@@ -21,10 +21,10 @@ describe('#EventEmitter', () => {
         });
 
         e.emit(eventName);
-        assert(flag);
+        assert.ok(flag);
     });
 
-    it('#test off', () => {
+    it('test off', () => {
         eventName = 'test off';
 
         e.on(eventName, () => {
@@ -32,10 +32,10 @@ describe('#EventEmitter', () => {
         });
         e.off(eventName);
         e.emit(eventName);
-        assert(!flag);
+        assert.ok(!flag);
     });
 
-    it('#test once', () => {
+    it('test once', () => {
         eventName = 'test once';
 
         e.once(eventName, () => {
@@ -44,10 +44,10 @@ describe('#EventEmitter', () => {
 
         e.emit(eventName);
         e.emit(eventName);
-        assert(flag);
+        assert.ok(flag);
     });
 
-    it('#test prependListener', () => {
+    it('test prependListener', () => {
         eventName = 'test prependListener';
         flag = 6;
 
@@ -60,10 +60,10 @@ describe('#EventEmitter', () => {
         });
 
         e.emit(eventName);
-        assert(flag === 14);
+        assert.strictEqual(flag, 14);
     });
 
-    it('#test prependOnceListener', () => {
+    it('test prependOnceListener', () => {
         eventName = 'test prependOnceListener';
         flag = 6;
 
@@ -77,10 +77,10 @@ describe('#EventEmitter', () => {
 
         e.emit(eventName);
         e.emit(eventName);
-        assert(flag === 28);
+        assert.strictEqual(flag, 28);
     });
 
-    it('#test listenerCount', () => {
+    it('test listenerCount', () => {
         eventName = 'test listenerCount';
         const listener = () => {};
 
@@ -97,7 +97,7 @@ describe('#EventEmitter', () => {
         assert.doesNotThrow(() => e.addListener(listener));
     });
 
-    it('#test listeners', () => {
+    it('test listeners', () => {
         eventName = 'test listeners';
         const listener = () => {};
 
@@ -105,20 +105,20 @@ describe('#EventEmitter', () => {
         e.once(eventName, listener);
         e.removeListener(eventName);
 
-        assert(e.listeners(eventName).length === 1);
+        assert.strictEqual(e.listeners(eventName).length, 1);
     });
 
-    it('#test rawListeners', () => {
+    it('test rawListeners', () => {
         eventName = 'test rawListeners';
         const listener = () => {};
 
         e.addListener(eventName, listener);
         e.once(eventName, listener);
 
-        assert(e.rawListeners(eventName)[1].listener === listener);
+        assert.strictEqual(e.rawListeners(eventName)[1].listener, listener);
     });
 
-    it('#test removeAllListeners', () => {
+    it('test removeAllListeners', () => {
         const listener = () => {};
         const otherEventName = 'abc';
         eventName = 'test removeAllListeners';
@@ -128,10 +128,10 @@ describe('#EventEmitter', () => {
         e.once(eventName, listener);
 
         e.removeAllListeners(eventName);
-        assert(e.listeners(eventName).length === 0);
-        assert(e.listeners(otherEventName).length === 1);
+        assert.strictEqual(e.listeners(eventName).length, 0);
+        assert.strictEqual(e.listeners(otherEventName).length, 1);
 
         e.removeAllListeners();
-        assert(e.listeners(otherEventName), 0);
+        assert.strictEqual(e.listeners(otherEventName).length, 0);
     });
 });

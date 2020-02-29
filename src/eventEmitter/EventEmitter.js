@@ -1,9 +1,15 @@
+/**
+ * @see {@link https://nodejs.org/api/events.html|node EventEmitter}
+ */
 class EventEmitter {
     // 默认最大订阅数 10
     static defaultMaxListeners = 10;
 
-    _listenerStore = {};
-    _maxListenerCount = EventEmitter.defaultMaxListeners;
+    constructor() {
+        // 使用对象而不是数组是因为一个 emitter 可以订阅不同的事件
+        this._listenerStore = {};
+        this._maxListenerCount = EventEmitter.defaultMaxListeners;
+    }
 
     /**
      * 添加订阅
@@ -41,12 +47,12 @@ class EventEmitter {
         const index = this._listenerStore[eventName].findIndex(
             existListener => existListener === listener || existListener.listener === listener,
         );
-        // 小技巧：只有当 index 等于 -1 的时候， ~index 才等于 0, 转换 bool 值为假。因此，我们可以使用 ~index 表示 index 不等于 -1
-        if (~index) this._listenerStore[eventName].splice(index, 1);
+        if (index !== -1) this._listenerStore[eventName].splice(index, 1);
 
         return this;
     }
 
+    // 使用闭包在执行后 off 掉自身即可
     once(eventName, listener, prepend = false) {
         const onceListener = (...args) => {
             listener(...args);
@@ -110,6 +116,7 @@ class EventEmitter {
     }
 
     setMaxListeners(n) {
+        // 必须为非负数
         if (typeof n !== 'number' || n < 0) {
             throw new Error(
                 `The value of "n" is out of range. It must be a non-negative number. Received '${n}'`,
@@ -124,14 +131,14 @@ class EventEmitter {
     removeAllListeners(eventName) {
         if (!eventName) {
             Object.keys(this._listenerStore).forEach(_eventName => {
-                this._listenerStore[_eventName] = [];
+                this._listenerStore[_eventName] = undefined;
             });
         } else {
-            this._listenerStore[eventName] = [];
+            this._listenerStore[eventName] = undefined;
         }
 
         return this;
     }
 }
 
-module.exports = EventEmitter.default = EventEmitter.EventEmitter = EventEmitter;
+module.exports = EventEmitter.default = EventEmitter;

@@ -7,7 +7,7 @@ function isThenable(value) {
 }
 
 class Promise {
-    static states = Object.freeze({
+    static _states = Object.freeze({
         PENDING: Symbol('pending'), // 初始状态
         FULFILLED: Symbol('fulfilled'), // 成功执行后的状态
         REJECTED: Symbol('rejected'), // 执行出错的状态
@@ -20,12 +20,12 @@ class Promise {
     constructor(executor) {
         // 默认值
         // promise 状态
-        this.state = Promise.states.PENDING;
+        this._state = Promise._states.PENDING;
         // resolve 的值
-        this.value = null;
+        this._value = null;
         // reject 的值
-        this.reason = null;
-        this.caught = false;
+        this._reason = null;
+        this._caught = false;
 
         // executer 中 resolve 后执行的回调
         // 我们必须用数组存而不是一个回调函数，是因为同一个 promise 可能被多次调用
@@ -59,7 +59,7 @@ class Promise {
             // 目前 node v12.16.1 和 chrome  80.0.3987.122 在没有 catch Promise 错误的情况下
             // 只会输出警告，不会影响后续代码的执行
             // 为了不影响我们 debug 这里先注释掉
-            if (!this.caught) {
+            if (!this._caught) {
                 console.error(`UnhandledPromiseRejectionWarning: ${reason}`);
                 console.error(
                     `UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch().`,
@@ -74,9 +74,9 @@ class Promise {
 
         const resolve = value => {
             // 有可能用户在 executor 中多次调用 resolve 或者 reject
-            if (this.state === Promise.states.PENDING) {
-                this.state = Promise.states.FULFILLED;
-                this.value = value;
+            if (this._state === Promise._states.PENDING) {
+                this._state = Promise._states.FULFILLED;
+                this._value = value;
 
                 // 使用 setTimeout 模拟 micro task
                 this.onFulfilledMicroTasks.forEach(microTask => setTimeout(() => microTask(value)));
@@ -84,9 +84,9 @@ class Promise {
         };
 
         const reject = reason => {
-            if (this.state === Promise.states.PENDING) {
-                this.state = Promise.states.REJECTED;
-                this.reason = reason;
+            if (this._state === Promise._states.PENDING) {
+                this._state = Promise._states.REJECTED;
+                this._reason = reason;
                 this.onRejectedMicroTasks.forEach(microTask => setTimeout(() => microTask(reason)));
             }
         };
@@ -109,7 +109,7 @@ class Promise {
         // 处理回调不是函数的情况，要确保后续调用 then 和 catch 能继续拿到 value 和 error
         if (typeof onfulfilled !== 'function') onfulfilled = value => value;
         if (typeof onrejected === 'function') {
-            this.caught = true;
+            this._caught = true;
         } else {
             onrejected = error => {
                 throw error;
@@ -123,7 +123,7 @@ class Promise {
         // 并且 Promise A+ 规范规定: Promise 状态一旦发生改变不能发生变化
         // 所以我们采用返回新实例的方式来实现链式调用
         const promise2 = new Promise((resolve, reject) => {
-            if (this.state === Promise.states.PENDING) {
+            if (this._state === Promise._states.PENDING) {
                 // pending 就 push 回调
                 this.onFulfilledMicroTasks.push(value => {
                     try {
@@ -142,20 +142,20 @@ class Promise {
                         reject(error);
                     }
                 });
-            } else if (this.state === Promise.states.FULFILLED) {
+            } else if (this._state === Promise._states.FULFILLED) {
                 // 已经改变状态就直接执行回调
                 setTimeout(() => {
                     try {
-                        const x = onfulfilled(this.value);
+                        const x = onfulfilled(this._value);
                         Promise.resolvePromise(this, promise2, x, resolve, reject);
                     } catch (error) {
                         reject(error);
                     }
                 }, 0);
-            } else if (this.state === Promise.states.REJECTED) {
+            } else if (this._state === Promise._states.REJECTED) {
                 setTimeout(() => {
                     try {
-                        const x = onrejected(this.reason);
+                        const x = onrejected(this._reason);
                         Promise.resolvePromise(this, promise2, x, resolve, reject);
                     } catch (error) {
                         reject(error);
