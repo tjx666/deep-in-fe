@@ -1,92 +1,58 @@
 const assert = require('assert');
 const co = require('../../src/co/co');
 
+const sleep = (seconds, value) => {
+    return new Promise(resolve => {
+        resolve(value);
+    }, seconds * 1000);
+};
+
 describe('#co', () => {
-    const sleep = (seconds, value) => {
-        return new Promise(resolve => {
-            resolve(value);
-        }, seconds * 1000);
-    };
+    it('simple test co(gen)', async () => {
+        function* gen() {
+            const value = yield sleep(1, 666);
+            assert.strictEqual(value, 666);
+        }
 
-    describe('#co', () => {
-        it('#simple test co(gen)', async () => {
-            const gen = function*() {
-                const value = yield sleep(1, 666);
-                assert(value === 666);
-            };
-
-            await co(gen);
-        });
-
-        it('#test promise reject', async () => {
-            const gen = function*() {
-                try {
-                    // eslint-disable-next-line prefer-promise-reject-errors
-                    yield Promise.reject(666);
-                } catch (err) {
-                    assert(err === 666);
-                }
-            };
-
-            await co(gen);
-        });
-
-        it('#test execute next throw exp', async () => {
-            const gen = function*() {
-                yield { a: sleep(1, 666), b: 999 };
-                // eslint-disable-next-line no-throw-literal
-                throw 666;
-            };
-
-            try {
-                await co(gen);
-            } catch (err) {
-                assert(err === 666);
-            }
-        });
-
-        it('#yield generatorFunction', async () => {
-            const gen1 = function*() {
-                yield sleep(1, 666);
-            };
-            const gen2 = function*() {
-                yield gen1;
-            };
-
-            await co(gen2);
-        });
-
-        it('#yield Object', async () => {
-            const gen = function*() {
-                const value = yield { a: sleep(1, 666), b: 999 };
-                assert(value.a === 666);
-            };
-
-            await co(gen);
-        });
-
-        it('#test yield not arrowed value', async () => {
-            const gen = function*() {
-                yield 333;
-            };
-
-            try {
-                await co(gen);
-            } catch (err) {
-                assert(err instanceof TypeError);
-            }
-        });
+        await co(gen);
     });
 
-    describe('#wrap', () => {
-        it('#simple test co.wrap', async () => {
-            const gen = function*(v) {
-                assert(v);
-                const value = yield sleep(1, 666);
-                assert(value === 666);
-            };
+    it('test promise reject', async () => {
+        const gen = function*() {
+            try {
+                // eslint-disable-next-line prefer-promise-reject-errors
+                yield Promise.reject(666);
+            } catch (error) {
+                assert.strictEqual(error, 666);
+            }
+        };
 
-            await co.wrap(gen)(true);
-        });
+        await co(gen);
+    });
+
+    it('test execute next throw exp', async () => {
+        const gen = function*() {
+            yield Promise.resolve(666);
+            // eslint-disable-next-line no-throw-literal
+            throw 666;
+        };
+
+        try {
+            await co(gen);
+        } catch (error) {
+            assert.strictEqual(error, 666);
+        }
+    });
+
+    it('test yield not arrowed value', async () => {
+        const gen = function*() {
+            yield 333;
+        };
+
+        try {
+            await co(gen);
+        } catch (error) {
+            assert.ok(error instanceof TypeError);
+        }
     });
 });

@@ -1,122 +1,62 @@
 /* eslint-disable no-use-before-define */
+const { types } = require('util');
 
 /**
  * 模拟 async/await 异步流程控制的工具函数
+ * 为了便于理解，相对于 TJ 的 co 库精简了很多
  *
- * @param {Function} generatorFn
+ * @param {Function} gen
  * @return {Promise}
  */
-function co(generatorFn, ...args) {
+function co(gen, ...args) {
+    // 返回一个新的 Promise
     return new Promise((resolve, reject) => {
-        // 获取生成器对象
-        const generatorObj =
-            typeof generatorFn === 'function' ? generatorFn.apply(this, args) : generatorFn;
-        // 如果返回不是生成器对象就直接 resolve
-        if (!isGenerator(generatorObj)) return resolve(generatorFn);
+        if (!types.isGeneratorFunction(gen)) {
+            throw TypeError(`${gen} is not generator function!`);
+        }
+
+        const genObj = gen.apply(this, args);
 
         function onFulfilled(value) {
             let result;
 
             try {
-                result = generatorObj.next(value);
-            } catch (err) {
-                return reject(err);
+                result = genObj.next(value);
+            } catch (error) {
+                return reject(error);
             }
 
             next(result);
         }
 
-        function onRejected(err) {
+        function onRejected(error) {
             let result;
 
             try {
-                result = generatorObj.throw(err);
-            } catch (err) {
-                return reject(err);
+                result = genObj.throw(error);
+            } catch (error) {
+                return reject(error);
             }
 
             next(result);
         }
 
-        const next = result => {
+        function next(result) {
             if (result.done) return resolve(result.value);
 
-            const promise = toPromise.call(this, result.value);
-            if (isPromise(promise)) return promise.then(onFulfilled, onRejected);
+            const promise = result.value;
+            if (!types.isPromise(promise)) {
+                return onRejected(
+                    new TypeError(`You can only yield promise, but you yield${promise}`),
+                );
+            }
 
-            return onRejected(
-                new TypeError(
-                    // prettier-ignore
-                    `You may only yield a function, promise, generator, array, or object, but the following object was passed: "${String(result.value)}"`,
-                ),
-            );
-        };
+            // 递归 onFulfilled
+            return promise.then(onFulfilled, onRejected);
+        }
 
         onFulfilled();
     });
-}
-
-co.wrap = function(fn) {
-    createPromise.__generatorFunction__ = fn;
-
-    function createPromise(...args) {
-        return co.call(this, fn.apply(this, args));
-    }
-
-    return createPromise;
-};
-
-function objectToPromise(obj) {
-    const results = new obj.constructor();
-    let promises = [];
-    promises = Object.entries(obj).map(([key, value]) => {
-        const promise = toPromise.call(this, value);
-
-        if (isPromise(promise)) {
-            results[key] = undefined;
-            promises.push(
-                promise.then(value => {
-                    results[key] = value;
-                }),
-            );
-        } else {
-            results[key] = value;
-        }
-    });
-
-    return Promise.all(promises).then(() => results);
-}
-
-function toPromise(value) {
-    if (!value) return value;
-    if (isPromise(value)) return value;
-    if (isGeneratorFunction(value) || isGenerator(value)) return co.call(this, value);
-    if (Array.isArray(value)) return Promise.all(value.map(toPromise, this));
-    if (isObject(value)) return objectToPromise(value);
-
-    return value;
-}
-
-function isPromise(obj) {
-    return typeof obj.then === 'function';
-}
-
-function isGenerator(obj) {
-    return obj && typeof obj.next === 'function' && typeof obj.throw === 'function';
-}
-
-function isGeneratorFunction(obj) {
-    const { constructor } = obj;
-
-    if (!constructor) return false;
-    if (constructor.name === 'GeneratorFunction' || constructor.displayName === 'GeneratorFunction')
-        return true;
-
-    return isGenerator(constructor.prototype);
-}
-
-function isObject(obj) {
-    return obj && obj.constructor === Object;
 }
 
 module.exports = co;
