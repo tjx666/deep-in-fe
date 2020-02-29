@@ -8,6 +8,7 @@ delete require.cache[__filename];
 
 function requireDir(dir = '.', opts = {}) {
     const defaultOptions = {
+        // eslint-disable-next-line node/no-deprecated-api
         extensions: Object.keys(require.extensions),
         duplicates: false,
         recurse: false,
