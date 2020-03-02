@@ -14,17 +14,18 @@
    - 解析 queryString ✔
    - 串行执行 promise ✔
    - 函数管道 ✔
-8. 防抖和节流
-9. [原型继承](https://github.com/tjx666/deep-in-fe/tree/master/src/prototypeExtends) ✔
-10. [事件委托](https://github.com/tjx666/deep-in-fe/tree/master/src/eventDelegation) ✔
-11. [redux](https://github.com/tjx666/deep-in-fe/tree/master/src/redux) ✔
-12. [call, apply, bind](https://github.com/tjx666/deep-in-fe/tree/master/src/callApplyBind) ✔
-13. [深度克隆](https://github.com/tjx666/deep-in-fe/tree/master/src/cloneDeep) ✔
-14. [ajax](https://github.com/tjx666/deep-in-fe/tree/master/src/ajax)
+8. [防抖](https://github.com/tjx666/deep-in-fe/tree/master/src/debounce) ✔
+9. [节流](https://github.com/tjx666/deep-in-fe/tree/master/src/throttle) ✔
+10. [原型继承](https://github.com/tjx666/deep-in-fe/tree/master/src/prototypeExtends) ✔
+11. [事件委托](https://github.com/tjx666/deep-in-fe/tree/master/src/eventDelegation) ✔
+12. [redux](https://github.com/tjx666/deep-in-fe/tree/master/src/redux) ✔
+13. [call, apply, bind](https://github.com/tjx666/deep-in-fe/tree/master/src/callApplyBind) ✔
+14. [深度克隆](https://github.com/tjx666/deep-in-fe/tree/master/src/cloneDeep) ✔
+15. [ajax](https://github.com/tjx666/deep-in-fe/tree/master/src/ajax)
     - 原生 ajax ✔
     - jsonp ✔
-15. [处理服务器返回 null](https://github.com/tjx666/deep-in-fe/tree/master/src/safeGet)
+16. [处理服务器返回 null](https://github.com/tjx666/deep-in-fe/tree/master/src/safeGet)
     - lodash get ✔
     - 基于 proxy 的 safetyify ✔
-16. [koa 中间件机制](https://github.com/tjx666/deep-in-fe/tree/master/src/koaMiddleware) ✔
-17. [curry](https://github.com/tjx666/deep-in-fe/tree/master/src/curry) ✔
+17. [koa 中间件机制](https://github.com/tjx666/deep-in-fe/tree/master/src/koaMiddleware) ✔
+18. [curry](https://github.com/tjx666/deep-in-fe/tree/master/src/curry) ✔

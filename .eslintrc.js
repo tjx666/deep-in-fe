@@ -32,6 +32,7 @@ module.exports = {
 
         'array-callback-return': OFF,
         'consistent-return': OFF,
+        eqeqeq: [ERROR, 'smart'],
         'func-names': OFF,
         'global-require': OFF,
         'import/newline-after-import': OFF,
