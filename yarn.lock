@@ -176,7 +176,7 @@ acorn-es7-plugin@^1.0.10, acorn-es7-plugin@^1.0.12:
   resolved "https://registry.npm.taobao.org/acorn-es7-plugin/download/acorn-es7-plugin-1.1.7.tgz#f2ee1f3228a90eead1245f9ab1922eb2e71d336b"
   integrity sha1-8u4fMiipDurRJF+asZIusucdM2s=
 
-acorn-jsx@^5.1.0:
+acorn-jsx@^5.2.0:
   version "5.2.0"
   resolved "https://registry.npm.taobao.org/acorn-jsx/download/acorn-jsx-5.2.0.tgz#4c66069173d6fdd68ed85239fc256226182b2ebe"
   integrity sha1-TGYGkXPW/daO2FI5/CViJhgrLr4=
@@ -1213,12 +1213,12 @@ espower@^2.1.1:
     type-name "^2.0.0"
 
 espree@^6.1.2:
-  version "6.1.2"
-  resolved "https://registry.npm.taobao.org/espree/download/espree-6.1.2.tgz#6c272650932b4f91c3714e5e7b5f5e2ecf47262d"
-  integrity sha1-bCcmUJMrT5HDcU5ee19eLs9HJi0=
+  version "6.2.0"
+  resolved "https://registry.npm.taobao.org/espree/download/espree-6.2.0.tgz?cache=0&sync_timestamp=1583168748616&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fespree%2Fdownload%2Fespree-6.2.0.tgz#349fef01a202bbab047748300deb37fa44da79d7"
+  integrity sha1-NJ/vAaICu6sEd0gwDes3+kTaedc=
   dependencies:
     acorn "^7.1.0"
-    acorn-jsx "^5.1.0"
+    acorn-jsx "^5.2.0"
     eslint-visitor-keys "^1.1.0"
 
 esprima@^2.0.0:
@@ -3734,12 +3734,12 @@ urlgrey@0.4.4:
 
 uuid@^3.3.2, uuid@^3.3.3:
   version "3.4.0"
-  resolved "https://registry.npm.taobao.org/uuid/download/uuid-3.4.0.tgz?cache=0&sync_timestamp=1582662735489&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fuuid%2Fdownload%2Fuuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
+  resolved "https://registry.npm.taobao.org/uuid/download/uuid-3.4.0.tgz?cache=0&sync_timestamp=1583181524462&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fuuid%2Fdownload%2Fuuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha1-sj5DWK+oogL+ehAK8fX4g/AgB+4=
 
 uuid@^7.0.0:
   version "7.0.1"
-  resolved "https://registry.npm.taobao.org/uuid/download/uuid-7.0.1.tgz?cache=0&sync_timestamp=1582662735489&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fuuid%2Fdownload%2Fuuid-7.0.1.tgz#95ed6ff3d8c881cbf85f0f05cc3915ef994818ef"
+  resolved "https://registry.npm.taobao.org/uuid/download/uuid-7.0.1.tgz?cache=0&sync_timestamp=1583181524462&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fuuid%2Fdownload%2Fuuid-7.0.1.tgz#95ed6ff3d8c881cbf85f0f05cc3915ef994818ef"
   integrity sha1-le1v89jIgcv4Xw8FzDkV75lIGO8=
 
 v8-compile-cache@^2.0.3:
@@ -3871,7 +3871,7 @@ yaml@^1.7.2:
 
 yargs-parser@13.1.1, yargs-parser@^13.1.1:
   version "13.1.1"
-  resolved "https://registry.npm.taobao.org/yargs-parser/download/yargs-parser-13.1.1.tgz?cache=0&sync_timestamp=1583026805760&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fyargs-parser%2Fdownload%2Fyargs-parser-13.1.1.tgz#d26058532aa06d365fe091f6a1fc06b2f7e5eca0"
+  resolved "https://registry.npm.taobao.org/yargs-parser/download/yargs-parser-13.1.1.tgz#d26058532aa06d365fe091f6a1fc06b2f7e5eca0"
   integrity sha1-0mBYUyqgbTZf4JH2ofwGsvfl7KA=
   dependencies:
     camelcase "^5.0.0"
@@ -3879,7 +3879,7 @@ yargs-parser@13.1.1, yargs-parser@^13.1.1:
 
 yargs-parser@^11.1.1:
   version "11.1.1"
-  resolved "https://registry.npm.taobao.org/yargs-parser/download/yargs-parser-11.1.1.tgz?cache=0&sync_timestamp=1583026805760&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fyargs-parser%2Fdownload%2Fyargs-parser-11.1.1.tgz#879a0865973bca9f6bab5cbdf3b1c67ec7d3bcf4"
+  resolved "https://registry.npm.taobao.org/yargs-parser/download/yargs-parser-11.1.1.tgz#879a0865973bca9f6bab5cbdf3b1c67ec7d3bcf4"
   integrity sha1-h5oIZZc7yp9rq1y987HGfsfTvPQ=
   dependencies:
     camelcase "^5.0.0"
@@ -3887,7 +3887,7 @@ yargs-parser@^11.1.1:
 
 yargs-parser@^16.1.0:
   version "16.1.0"
-  resolved "https://registry.npm.taobao.org/yargs-parser/download/yargs-parser-16.1.0.tgz?cache=0&sync_timestamp=1583026805760&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fyargs-parser%2Fdownload%2Fyargs-parser-16.1.0.tgz#73747d53ae187e7b8dbe333f95714c76ea00ecf1"
+  resolved "https://registry.npm.taobao.org/yargs-parser/download/yargs-parser-16.1.0.tgz#73747d53ae187e7b8dbe333f95714c76ea00ecf1"
   integrity sha1-c3R9U64YfnuNvjM/lXFMduoA7PE=
   dependencies:
     camelcase "^5.0.0"
@@ -3904,7 +3904,7 @@ yargs-unparser@1.6.0:
 
 yargs@12.0.5:
   version "12.0.5"
-  resolved "https://registry.npm.taobao.org/yargs/download/yargs-12.0.5.tgz?cache=0&sync_timestamp=1583086122655&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fyargs%2Fdownload%2Fyargs-12.0.5.tgz#05f5997b609647b64f66b81e3b4b10a368e7ad13"
+  resolved "https://registry.npm.taobao.org/yargs/download/yargs-12.0.5.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fyargs%2Fdownload%2Fyargs-12.0.5.tgz#05f5997b609647b64f66b81e3b4b10a368e7ad13"
   integrity sha1-BfWZe2CWR7ZPZrgeO0sQo2jnrRM=
   dependencies:
     cliui "^4.0.0"
@@ -3922,7 +3922,7 @@ yargs@12.0.5:
 
 yargs@13.3.0, yargs@^13.2.2, yargs@^13.3.0:
   version "13.3.0"
-  resolved "https://registry.npm.taobao.org/yargs/download/yargs-13.3.0.tgz?cache=0&sync_timestamp=1583086122655&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fyargs%2Fdownload%2Fyargs-13.3.0.tgz#4c657a55e07e5f2cf947f8a366567c04a0dedc83"
+  resolved "https://registry.npm.taobao.org/yargs/download/yargs-13.3.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fyargs%2Fdownload%2Fyargs-13.3.0.tgz#4c657a55e07e5f2cf947f8a366567c04a0dedc83"
   integrity sha1-TGV6VeB+Xyz5R/ijZlZ8BKDe3IM=
   dependencies:
     cliui "^5.0.0"
@@ -3938,7 +3938,7 @@ yargs@13.3.0, yargs@^13.2.2, yargs@^13.3.0:
 
 yargs@^15.0.2:
   version "15.1.0"
-  resolved "https://registry.npm.taobao.org/yargs/download/yargs-15.1.0.tgz?cache=0&sync_timestamp=1583086122655&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fyargs%2Fdownload%2Fyargs-15.1.0.tgz#e111381f5830e863a89550bd4b136bb6a5f37219"
+  resolved "https://registry.npm.taobao.org/yargs/download/yargs-15.1.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fyargs%2Fdownload%2Fyargs-15.1.0.tgz#e111381f5830e863a89550bd4b136bb6a5f37219"
   integrity sha1-4RE4H1gw6GOolVC9SxNrtqXzchk=
   dependencies:
     cliui "^6.0.0"

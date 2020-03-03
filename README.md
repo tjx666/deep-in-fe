@@ -41,7 +41,11 @@
    - 比较时间戳 ✔
    - 定时器 ✔
 
-10. [原型继承](https://github.com/tjx666/deep-in-fe/tree/master/src/prototypeExtends) ✔
+10. [继承](https://github.com/tjx666/deep-in-fe/tree/master/src/extends)
+
+    - 原型继承 ✔
+    - 组合继承 ✔
+    - ES6 class 继承 ✔
 
 11. [事件委托](https://github.com/tjx666/deep-in-fe/tree/master/src/eventDelegation) ✔
 
