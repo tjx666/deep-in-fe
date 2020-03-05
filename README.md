@@ -49,22 +49,29 @@
 
 11. [事件委托](https://github.com/tjx666/deep-in-fe/tree/master/src/eventDelegation) ✔
 
-12. [redux](https://github.com/tjx666/deep-in-fe/tree/master/src/redux) ✔
+12. [扁平化数组](https://github.com/tjx666/deep-in-fe/tree/master/src/flat)
 
-13. [call, apply, bind](https://github.com/tjx666/deep-in-fe/tree/master/src/callApplyBind) ✔
+    - reduce 递归 ✔
+    - toString ✔
+    - splice 非递归 ✔
+    - 指定深度的 flatDepth ✔
 
-14. [深度克隆](https://github.com/tjx666/deep-in-fe/tree/master/src/cloneDeep) ✔
+13. [redux](https://github.com/tjx666/deep-in-fe/tree/master/src/redux) ✔
 
-15. [ajax](https://github.com/tjx666/deep-in-fe/tree/master/src/ajax)
+14. [call, apply, bind](https://github.com/tjx666/deep-in-fe/tree/master/src/callApplyBind) ✔
+
+15. [深度克隆](https://github.com/tjx666/deep-in-fe/tree/master/src/cloneDeep) ✔
+
+16. [ajax](https://github.com/tjx666/deep-in-fe/tree/master/src/ajax)
 
     - 原生 ajax ✔
     - jsonp ✔
 
-16. [处理服务器返回 null](https://github.com/tjx666/deep-in-fe/tree/master/src/safeGet)
+17. [处理服务器返回 null](https://github.com/tjx666/deep-in-fe/tree/master/src/safeGet)
 
     - lodash get ✔
     - proxy ✔
 
-17. [koa 中间件机制](https://github.com/tjx666/deep-in-fe/tree/master/src/koaMiddleware) ✔
+18. [koa 中间件机制](https://github.com/tjx666/deep-in-fe/tree/master/src/koaMiddleware) ✔
 
-18. [curry](https://github.com/tjx666/deep-in-fe/tree/master/src/curry) ✔
+19. [curry](https://github.com/tjx666/deep-in-fe/tree/master/src/curry) ✔
