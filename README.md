@@ -49,16 +49,16 @@
 
 11. [事件委托](https://github.com/tjx666/deep-in-fe/tree/master/src/eventDelegation) ✔
 
-12. [扁平化数组](https://github.com/tjx666/deep-in-fe/tree/master/src/flat)
+12. [call, apply, bind](https://github.com/tjx666/deep-in-fe/tree/master/src/callApplyBind) ✔
+
+13. [扁平化数组](https://github.com/tjx666/deep-in-fe/tree/master/src/flat)
 
     - reduce 递归 ✔
     - toString ✔
     - splice 非递归 ✔
     - 指定深度的 flatDepth ✔
 
-13. [redux](https://github.com/tjx666/deep-in-fe/tree/master/src/redux) ✔
-
-14. [call, apply, bind](https://github.com/tjx666/deep-in-fe/tree/master/src/callApplyBind) ✔
+14. [redux](https://github.com/tjx666/deep-in-fe/tree/master/src/redux) ✔
 
 15. [深度克隆](https://github.com/tjx666/deep-in-fe/tree/master/src/cloneDeep) ✔
 
