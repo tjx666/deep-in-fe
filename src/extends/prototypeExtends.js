@@ -1,5 +1,3 @@
-const createObject = require('./createObject');
-
 /**
  * 原型继承
  *
@@ -11,7 +9,12 @@ const createObject = require('./createObject');
  * @param {Function} superClass 父类
  */
 function prototypeExtends(subClass, superClass) {
-    subClass.prototype = createObject(superClass.prototype);
+    // 或者 subClass.prototype = Object.create(superClass.prototype);
+    Reflect.setPrototypeOf(subClass.prototype, superClass.prototype);
+    Object.defineProperty(subClass.prototype, 'constructor', {
+        value: subClass,
+        writable: true,
+    });
     subClass.prototype.constructor = subClass;
 }
 

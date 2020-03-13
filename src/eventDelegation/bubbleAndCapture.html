@@ -5,69 +5,98 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>bubble and capture</title>
         <style>
-            .parent {
-                margin: 60px auto;
+            .grandparent {
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 width: 800px;
                 height: 600px;
-                border: 2px solid black;
+                margin: 60px auto;
+                border: 2px solid red;
+            }
+
+            .parent {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 600px;
+                height: 450px;
+                border: 2px solid green;
             }
 
             .child {
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 width: 400px;
                 height: 300px;
-                margin: 150px auto;
-                background-color: gray;
+                border: 2px solid blue;
             }
         </style>
+        
     </head>
     <body>
         <div class="grandparent">
             <div class="parent">
-                <div class="child"></div>
+                <div class="child">
+                    <form action="https://www.baidu.com">
+                        <input type="submit" />
+                    </form>
+                </div>
             </div>
         </div>
         <script>
             const grandparent = document.querySelector('.grandparent');
             const parent = document.querySelector('.parent');
             const child = document.querySelector('.child');
+            const input = document.querySelector('input');
 
             // 捕获阶段
             // 从父元素往目标元素依次执行注册的捕获事件回调
             grandparent.addEventListener(
                 'click',
                 function(event) {
-                    console.log('grandparent capture');
+                    console.log('grandparent: capture');
                 },
-                true,
+                { capture: true, once: true },
             );
             parent.addEventListener(
                 'click',
                 function(event) {
-                    console.log('parent capture');
+                    console.log('parent: capture');
                 },
-                true,
+                { capture: true },
             );
 
             // 目标阶段
             // 完全按注册顺序先后执行，也就是说，如果先注册冒泡事件后注册捕获事件，会先执行冒泡事件的回调
+            child.addEventListener('click', function(event) {
+                console.log('target: bubble');
+            });
             child.addEventListener(
                 'click',
                 function(event) {
-                    console.log('target bubble');
+                    console.log('target: capture');
                 },
-                true,
+                { capture: true },
             );
-            child.addEventListener('click', function(event) {
-                console.log('target capture');
-            });
 
             // 冒泡
             // 按照目标元素到父元素的顺序一次执行注册的回调
             parent.addEventListener('click', function(event) {
-                console.log('parent bubble');
+                console.log('parent: bubble');
+                // 停止冒泡
+                // event.stopPropagation();
             });
             grandparent.addEventListener('click', function(event) {
-                console.log('grandparent bubble');
+                console.log('grandparent: bubble');
+            });
+
+            input.addEventListener('click', event => {
+                console.log('submit');
+                event.preventDefault();
+                // 原生 js return false 啥用也没有
+                // return false;
             });
         </script>
     </body>
