@@ -32,7 +32,6 @@ module.exports = {
 
         'array-callback-return': OFF,
         'consistent-return': OFF,
-        eqeqeq: [ERROR, 'smart'],
         'func-names': OFF,
         'global-require': OFF,
         'import/newline-after-import': OFF,
@@ -55,6 +54,8 @@ module.exports = {
         'no-restricted-syntax': OFF,
         'no-shadow': OFF,
         'no-underscore-dangle': OFF,
+        'no-unused-expressions': OFF,
         'no-unused-vars': OFF,
+        eqeqeq: [ERROR, 'smart'],
     },
 };
