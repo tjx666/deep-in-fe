@@ -1,6 +1,8 @@
-## 深入前端系列
+# 深入前端系列
 
 [![Build Status](https://travis-ci.org/tjx666/deep-in-fe.svg?branch=master)](https://travis-ci.org/tjx666/deep-in-fe) [![codecov](https://codecov.io/gh/tjx666/deep-in-fe/branch/master/graph/badge.svg)](https://codecov.io/gh/tjx666/deep-in-fe) [![devDependencies Status](https://david-dm.org/tjx666/deep-in-fe/dev-status.svg)](https://david-dm.org/tjx666/deep-in-fe?type=dev) [![Known Vulnerabilities](https://snyk.io/test/github/tjx666/deep-in-fe/badge.svg?targetFile=package.json)](https://snyk.io/test/github/tjx666/deep-in-fe?targetFile=package.json) [![Percentage of issues still open](https://isitmaintained.com/badge/open/tjx666/deep-in-fe.svg)](http://isitmaintained.com/project/tjx666/deep-in-fe)
+
+## JavaScript
 
 1. [实现一个完全符合 Promise A+ 规范的 Promise](https://github.com/tjx666/deep-in-fe/tree/master/src/promise) ✔
 
@@ -58,20 +60,24 @@
     - splice 非递归 ✔
     - 指定深度的 flatDepth ✔
 
-14. [redux](https://github.com/tjx666/deep-in-fe/tree/master/src/redux) ✔
+14. [模拟私有属性](https://github.com/tjx666/deep-in-fe/tree/master/src/privateProperty) ✔
 
-15. [深度克隆](https://github.com/tjx666/deep-in-fe/tree/master/src/cloneDeep) ✔
+15. [redux](https://github.com/tjx666/deep-in-fe/tree/master/src/redux) ✔
 
-16. [ajax](https://github.com/tjx666/deep-in-fe/tree/master/src/ajax)
+16. [深度克隆](https://github.com/tjx666/deep-in-fe/tree/master/src/cloneDeep) ✔
+
+17. [ajax](https://github.com/tjx666/deep-in-fe/tree/master/src/ajax)
 
     - 原生 ajax ✔
     - jsonp ✔
 
-17. [处理服务器返回 null](https://github.com/tjx666/deep-in-fe/tree/master/src/safeGet)
+18. [处理服务器返回 null](https://github.com/tjx666/deep-in-fe/tree/master/src/safeGet)
 
     - lodash get ✔
     - proxy ✔
 
-18. [koa 中间件机制](https://github.com/tjx666/deep-in-fe/tree/master/src/koaMiddleware) ✔
+19. [koa 中间件机制](https://github.com/tjx666/deep-in-fe/tree/master/src/koaMiddleware) ✔
 
-19. [curry](https://github.com/tjx666/deep-in-fe/tree/master/src/curry) ✔
+20. [curry](https://github.com/tjx666/deep-in-fe/tree/master/src/curry) ✔
+
+## CSS

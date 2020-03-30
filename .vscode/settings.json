@@ -21,5 +21,6 @@
     },
     "[markdown]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
-    }
+    },
+    "eslint.enable": false
 }

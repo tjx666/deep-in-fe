@@ -6,9 +6,7 @@
 
 const get = (object, path, defaultValue) => {
     if (!Array.isArray(path) && typeof path !== 'string')
-        throw new TypeError(
-            `path must be array or string, but you pass the type ${typeof path}`
-        );
+        throw new TypeError(`path must be array or string, but you pass the type ${typeof path}`);
 
     // object 的类型如果是 null 或者 undefined 直接返回 default value
     if (object == null) return defaultValue;
@@ -18,6 +16,7 @@ const get = (object, path, defaultValue) => {
         // 如果 path 是字符串需要解析成特性数组，这里只是简单的替换 [expression] 成 .expression 后根据 . 拆分成特性数组
         // 其实 lodash 源码比这复杂的多
         path = path.replace(/\[(\w*)\]/g, '.$1');
+        path = path.startsWith('.') ? path.slice(1) : path;
         propArray = path.split('.');
     }
 
@@ -31,9 +30,7 @@ const get = (object, path, defaultValue) => {
         object = object[property];
     }
 
-    return index && index === length && object !== undefined
-        ? object
-        : defaultValue;
+    return index && index === length && object !== undefined ? object : defaultValue;
 };
 
 module.exports = get;
