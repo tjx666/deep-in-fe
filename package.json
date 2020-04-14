@@ -6,7 +6,7 @@
     "main": "index.js",
     "type": "commonjs",
     "engines": {
-        "node": "12.16.1"
+        "node": "12.16.2"
     },
     "author": "YuTengjing",
     "license": "MIT",

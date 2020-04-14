@@ -37,7 +37,7 @@ class Promise {
         // executor 中 reject 时或者抛出错误时执行的回调
         this.onRejectedMicroTasks = [];
 
-        this.onFulfilledMicroTasks.push(value => {
+        this.onFulfilledMicroTasks.push((value) => {
             // 默认的回调也要检查是否循环链，例如：
             // const p = new Promise((resolve, reject) => {
             //     setTimeout(() => {
@@ -49,7 +49,7 @@ class Promise {
             }
         });
 
-        this.onRejectedMicroTasks.push(reason => {
+        this.onRejectedMicroTasks.push((reason) => {
             if (reason === this) {
                 console.warn('Chaining cycle detected for promise #<Promise>');
                 // eslint-disable-next-line no-useless-return
@@ -72,22 +72,26 @@ class Promise {
             throw new TypeError(`Promise resolver ${executor} is not a function`);
         }
 
-        const resolve = value => {
+        const resolve = (value) => {
             // 有可能用户在 executor 中多次调用 resolve 或者 reject
             if (this._state === Promise._states.PENDING) {
                 this._state = Promise._states.FULFILLED;
                 this._value = value;
 
                 // 使用 setTimeout 模拟 micro task
-                this.onFulfilledMicroTasks.forEach(microTask => setTimeout(() => microTask(value)));
+                this.onFulfilledMicroTasks.forEach((microTask) =>
+                    setTimeout(() => microTask(value)),
+                );
             }
         };
 
-        const reject = reason => {
+        const reject = (reason) => {
             if (this._state === Promise._states.PENDING) {
                 this._state = Promise._states.REJECTED;
                 this._reason = reason;
-                this.onRejectedMicroTasks.forEach(microTask => setTimeout(() => microTask(reason)));
+                this.onRejectedMicroTasks.forEach((microTask) =>
+                    setTimeout(() => microTask(reason)),
+                );
             }
         };
 
@@ -107,11 +111,11 @@ class Promise {
      */
     then = (onfulfilled, onrejected) => {
         // 处理回调不是函数的情况，要确保后续调用 then 和 catch 能继续拿到 value 和 error
-        if (typeof onfulfilled !== 'function') onfulfilled = value => value;
+        if (typeof onfulfilled !== 'function') onfulfilled = (value) => value;
         if (typeof onrejected === 'function') {
             this._caught = true;
         } else {
-            onrejected = error => {
+            onrejected = (error) => {
                 throw error;
             };
         }
@@ -125,7 +129,7 @@ class Promise {
         const promise2 = new Promise((resolve, reject) => {
             if (this._state === Promise._states.PENDING) {
                 // pending 就 push 回调
-                this.onFulfilledMicroTasks.push(value => {
+                this.onFulfilledMicroTasks.push((value) => {
                     try {
                         const x = onfulfilled(value);
                         Promise.resolvePromise(this, promise2, x, resolve, reject);
@@ -134,7 +138,7 @@ class Promise {
                     }
                 });
 
-                this.onRejectedMicroTasks.push(reason => {
+                this.onRejectedMicroTasks.push((reason) => {
                     try {
                         const x = onrejected(reason);
                         Promise.resolvePromise(this, promise2, x, resolve, reject);
@@ -184,13 +188,13 @@ class Promise {
             let resolvedOrRejected = false;
 
             // resolvePromise, rejectPromise 都是只能被调用一次
-            const resolvePromise = y => {
+            const resolvePromise = (y) => {
                 if (resolvedOrRejected) return;
                 resolvedOrRejected = true;
                 Promise.resolvePromise(self, promise2, y, resolve, reject);
             };
 
-            const rejectPromise = r => {
+            const rejectPromise = (r) => {
                 if (resolvedOrRejected) return;
                 resolvedOrRejected = true;
                 reject(r);
@@ -246,8 +250,8 @@ class Promise {
             // 是 thenable 对象就追踪它的状态
             if (isThenable(value)) {
                 value.then(
-                    value => resolve(value),
-                    reason => reject(reason),
+                    (value) => resolve(value),
+                    (reason) => reject(reason),
                 );
             } else {
                 // 直接 resolve
@@ -269,19 +273,21 @@ class Promise {
             return Promise.resolve(resultValues);
         }
 
+        let completedCount = 0;
         return new Promise((resolve, reject) => {
-            promises.forEach(promise => {
+            promises.forEach((promise, index) => {
                 if (!isThenable(promise)) {
                     promise = Promise.resolve(promise);
                 }
                 promise.then(
-                    value => {
-                        resultValues.push(value);
-                        if (resultValues.length === promises.length) {
+                    (value) => {
+                        completedCount++;
+                        resultValues[index] === value;
+                        if (completedCount === promises.length) {
                             resolve(resultValues);
                         }
                     },
-                    error => reject(error),
+                    (error) => reject(error),
                 );
             });
         });
@@ -291,10 +297,10 @@ class Promise {
     static race(promises) {
         promises = Array.from(promises);
         return new Promise((resolve, reject) => {
-            promises.forEach(promise => {
+            promises.forEach((promise) => {
                 promise.then(
-                    value => resolve(value),
-                    error => reject(error),
+                    (value) => resolve(value),
+                    (error) => reject(error),
                 );
             });
         });
@@ -307,14 +313,14 @@ class Promise {
         promises = Array.from(promises);
         return new Promise((resolve, reject) => {
             const results = [];
-            promises.forEach(promise => {
+            promises.forEach((promise) => {
                 if (!isThenable(promise)) {
                     promise = Promise.resolve(promise);
                 }
                 promise
                     .then(
-                        value => results.push({ status: 'fulfilled', value }),
-                        reason => results.push({ status: 'rejected', reason }),
+                        (value) => results.push({ status: 'fulfilled', value }),
+                        (reason) => results.push({ status: 'rejected', reason }),
                     )
                     .finally(() => {
                         if (results.length === promises.length) resolve(results);
@@ -324,8 +330,8 @@ class Promise {
     }
 
     // promises-aplus-tests 库测试用的
-    static resolved = value => {
-        return new Promise(resolve => resolve(value));
+    static resolved = (value) => {
+        return new Promise((resolve) => resolve(value));
     };
     static rejected = Promise.reject;
     static deferred() {

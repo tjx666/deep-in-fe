@@ -1,15 +1,15 @@
-const createStore = reducer => {
+const createStore = (reducer) => {
     let state;
     const listeners = [];
 
-    const subscribe = listener => {
+    const subscribe = (listener) => {
         listeners.push(listener);
 
         let isUnsubscribed = false;
         const unsubscribe = () => {
             if (isUnsubscribed) return;
 
-            const index = listeners.findIndex(eleListener => eleListener === listener);
+            const index = listeners.findIndex((eleListener) => eleListener === listener);
             if (~index) listeners.splice(index, 1);
             isUnsubscribed = true;
         };
@@ -17,11 +17,12 @@ const createStore = reducer => {
     };
 
     const getState = () => state;
-    const dispatch = action => {
+    const dispatch = (action) => {
         state = reducer(state, action);
-        listeners.forEach(listener => listener());
+        listeners.forEach((listener) => listener());
     };
     dispatch({});
+
     return {
         getState,
         dispatch,

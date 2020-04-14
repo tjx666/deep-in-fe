@@ -1,30 +1,36 @@
 const isObj = require('../is/isObject');
 
-function cloneDeep(obj, hasTravelMap = new WeakMap()) {
-    if (!isObj(obj)) return obj;
-    let clonedObj;
-    const Constructor = obj.constructor;
-    switch (Constructor) {
-        case Date:
-            clonedObj = new Constructor(obj.getTime());
-            break;
-        case RegExp:
-            clonedObj = new Constructor(obj);
-            break;
-        case Function:
-            clonedObj = obj.name ? eval(obj.toString()) : obj;
-            break;
-        default:
-            if (hasTravelMap.has(obj)) return hasTravelMap.get(obj);
+function cloneDeep(obj) {
+    const hadTraveledMap = new Map();
+
+    function clone(obj) {
+        if (!isObj(obj)) return obj;
+
+        if (hadTraveledMap.has(obj)) return hadTraveledMap.get(obj);
+        let clonedObj;
+        const Constructor = obj.constructor;
+
+        if (Constructor === Date) {
+            clonedObj = new Date(obj.getTime());
+        } else if (Constructor === RegExp) {
+            clonedObj = new RegExp(obj);
+        } else if (Constructor === Function) {
+            // ! 不安全，有可能被攻击者重写了函数的 toString()
+            clonedObj = eval(`(${obj.toString()})`);
+            Reflect.setPrototypeOf(clonedObj, Reflect.getPrototypeOf(obj));
+        } else {
             clonedObj = new Constructor();
-            hasTravelMap.set(obj, clonedObj);
+        }
+        hadTraveledMap.set(obj, clonedObj);
+
+        for (const [key, value] of Object.entries(obj)) {
+            clonedObj[key] = clone(value);
+        }
+
+        return clonedObj;
     }
 
-    for (const [key, value] of Object.entries(obj)) {
-        clonedObj[key] = isObj(value) ? cloneDeep(value) : value;
-    }
-
-    return clonedObj;
+    return clone(obj);
 }
 
 module.exports = cloneDeep;
