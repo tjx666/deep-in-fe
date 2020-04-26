@@ -1,189 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <title>原生 ajax</title>
-    <style>
-        #app {
-            width: 860px;
-            margin: 50px auto;
-        }
-
-        .url-input {
-            width: 200px;
-        }
-
-        button[type=submit] {
-            margin-left: 10px;
-        }
-
-        button[type=submit]:hover {
-            background-color: lightcoral;
-        }
-
-        button[type=submit]:active {
-            background-color: coral;
-        }
-
-        .data {
-            width: fit-content;
-            margin-top: 30px;
-        }
-
-        .add-kv {
-            width: 100px;
-            height: 20px;
-            margin: 0 auto;
-            margin-top: 10px;
-            background-color: gray;
-            text-align: center;
-            line-height: 20px;
-            color: white;
-        }
-
-        .add-kv:hover {
-            background-color: lightcoral;
-        }
-
-        .add-kv:active {
-            background-color: coral;
-        }
-
-        .result {
-            margin-top: 40px;
-        }
-
-        .result>pre {
-            width: 800px;
-            min-height: 50px;
-            border: 1px solid gray;
-        }
-    </style>
-</head>
-
-<body>
-    <div id="app">
-        <h2 class="title">test ajax</h2>
-        <input class="url-input" v-model="url" type="text" placeholder="URL">
-        <select v-model="method">
-            <option value="GET">GET</option>
-            <option value="POST">POST</option>
-        </select>
-        <button @click="handleSend" type="submit">send</button>
-        <div class="data">
-            <div v-for="(item, index) of requestData">
-                <input v-model="requestData[index][0]" type="text" class="key" placeholder="key">
-                &nbsp;:&nbsp;
-                <input v-model="requestData[index][1]" type="text" class="value" placeholder="value">
-            </div>
-            <div @click="handleAddKV" class="add-kv">+</div>
-        </div>
-        <div class="result">
-            <em>headers:</em>
-            <pre>{{headersText}}</pre>
-            <em>body:</em>
-            <span>进度：</span><progress :value="loaded" :max="total"></progress>&nbsp;<span>{{percent}}%</span>
-            <pre>{{responseText}}</pre>
-        </div>
-    </div>
-    <script>
-        const parseData = (data, method = 'GET') => {
-            if (method.toUpperCase() === 'GET') {
-                return Object.entries(data).map(([key, value]) => {
-                    console.log({ key, value });
-                    return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
-                }).join('&');
-            } else if (method.toUpperCase() === 'POST') {
-                return JSON.stringify(data)
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <title>原生 ajax</title>
+        <style>
+            #app {
+                width: 860px;
+                margin: 50px auto;
             }
-        }
 
-        const app = new Vue({
-            el: '#app',
-            data: {
-                url: 'http://localhost:1027/test/get',
-                method: 'GET',
-                headersText: '',
-                responseText: '',
-                response: {},
-                requestData: [['', '']],
-                total: 0,
-                loaded: 0,
-            },
-            computed: {
-                percent() {
-                    const { loaded, total } = this;
-                    return total === 0 ? 0 : Math.trunc(loaded / total * 100);
-                },
-            },
-            methods: {
-                handleAddKV() {
-                    this.requestData.push(['', ''])
-                    console.log({ keyValues: this.requestData })
-                },
-                /**
-                 * XHR 5 种状态：UNSENT, OPEND, HEADERS_RECEIVED, LOADING, DONE
-                 */
-                handleSend() {
-                    const { url, method, requestData } = this;
-                    // 先构造 XHR 对象
-                    const XHR = new XMLHttpRequest();
+            .url-input {
+                width: 200px;
+            }
 
-                    // UNSENT
-                    // console.log('构造完成 XHR 对象后 UNSENT: ', XHR.readyState === XHR.UNSENT);
+            button[type='submit'] {
+                margin-left: 10px;
+            }
 
-                    const data = requestData
-                        .filter((keyValue) => `${keyValue[0]}${keyValue[1]}`.trim() !== '')
-                        .reduce((previous, current) => {
-                            previous[current[0]] = current[1];
-                            return previous;
-                        }, {});
+            button[type='submit']:hover {
+                background-color: lightcoral;
+            }
 
-                    // open XHR
-                    if (method === 'GET') {
-                        XHR.open(method, `${url}?${parseData(data)}`);
-                        // OPEND
-                        // console.log('XHR open 后 OPEND：', XHR.readyState === XHR.OPENED);
-                        XHR.send();
-                    } else if (method === 'POST') {
-                        XHR.open(method, `${url}`);
-                        XHR.setRequestHeader('Content-type', 'application/json');
-                        XHR.send(parseData(data, 'POST'));
-                    }
+            button[type='submit']:active {
+                background-color: coral;
+            }
 
-                    XHR.addEventListener('readystatechange', () => {
-                        const { readyState } = XHR;
-                        if (readyState === 2 && readyState === XHR.HEADERS_RECEIVED) {
-                            const headersText = XHR.getAllResponseHeaders();
-                            this.headersText = headersText;
-                            this.total = XHR.getResponseHeader('Content-length');
-                            // console.log('已经接受所有响应头：', headersText);
-                        } else if (readyState === 3 && readyState === XHR.LOADING) {
-                            const { responseText } = XHR;
-                            this.responseText = responseText;
-                            // console.log('已经接受部分数据：', responseText);
-                        } else if (readyState === 4 && readyState === XHR.DONE) {
-                            const { responseText } = XHR;
-                            this.responseText = responseText;
-                            // console.log('接受完成所有响应数据：', responseText)
-                        } else {
-                            console.log('不可能发生：', readyState);
-                        }
-                    });
+            .data {
+                width: fit-content;
+                margin-top: 30px;
+            }
 
-                    XHR.addEventListener('progress', (event) => {
-                        console.log('触发了 progress 事件')
-                        this.loaded = event.loaded;
-                    });
+            .add-kv {
+                width: 100px;
+                height: 20px;
+                margin: 0 auto;
+                margin-top: 10px;
+                color: white;
+                line-height: 20px;
+                text-align: center;
+                background-color: gray;
+            }
+
+            .add-kv:hover {
+                background-color: lightcoral;
+            }
+
+            .add-kv:active {
+                background-color: coral;
+            }
+
+            .result {
+                margin-top: 40px;
+            }
+
+            .result > pre {
+                width: 800px;
+                min-height: 50px;
+                border: 1px solid gray;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+            <h2 class="title">test ajax</h2>
+            <input class="url-input" v-model="url" type="text" placeholder="URL" />
+            <select v-model="method">
+                <option value="GET">GET</option>
+                <option value="POST">POST</option>
+            </select>
+            <button @click="handleSend" type="submit">send</button>
+            <div class="data">
+                <div v-for="(item, index) of requestData">
+                    <input
+                        v-model="requestData[index][0]"
+                        type="text"
+                        class="key"
+                        placeholder="key"
+                    />
+                    &nbsp;:&nbsp;
+                    <input
+                        v-model="requestData[index][1]"
+                        type="text"
+                        class="value"
+                        placeholder="value"
+                    />
+                </div>
+                <div @click="handleAddKV" class="add-kv">+</div>
+            </div>
+            <div class="result">
+                <em>headers:</em>
+                <pre>{{headersText}}</pre>
+                <em>body:</em>
+                <span>进度：</span><progress :value="loaded" :max="total"></progress>&nbsp;<span
+                    >{{percent}}%</span
+                >
+                <pre>{{responseText}}</pre>
+            </div>
+        </div>
+        <script>
+            const parseData = (data, method = 'GET') => {
+                if (method.toUpperCase() === 'GET') {
+                    return Object.entries(data)
+                        .map(([key, value]) => {
+                            console.log({ key, value });
+                            return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+                        })
+                        .join('&');
+                } else if (method.toUpperCase() === 'POST') {
+                    return JSON.stringify(data);
                 }
-            },
-        });
+            };
 
-    </script>
-</body>
+            const app = new Vue({
+                el: '#app',
+                data: {
+                    url: 'http://localhost:1027/test/get',
+                    method: 'GET',
+                    headersText: '',
+                    responseText: '',
+                    response: {},
+                    requestData: [['', '']],
+                    total: 0,
+                    loaded: 0,
+                },
+                computed: {
+                    percent() {
+                        const { loaded, total } = this;
+                        return total === 0 ? 0 : Math.trunc((loaded / total) * 100);
+                    },
+                },
+                methods: {
+                    handleAddKV() {
+                        this.requestData.push(['', '']);
+                        console.log({ keyValues: this.requestData });
+                    },
+                    /**
+                     * XHR 5 种状态：UNSENT, OPEND, HEADERS_RECEIVED, LOADING, DONE
+                     */
+                    handleSend() {
+                        const { url, method, requestData } = this;
+                        // 先构造 XHR 对象
+                        const XHR = new XMLHttpRequest();
 
+                        // UNSENT
+                        // console.log('构造完成 XHR 对象后 UNSENT: ', XHR.readyState === XHR.UNSENT);
+
+                        const data = requestData
+                            .filter((keyValue) => `${keyValue[0]}${keyValue[1]}`.trim() !== '')
+                            .reduce((previous, current) => {
+                                previous[current[0]] = current[1];
+                                return previous;
+                            }, {});
+
+                        // open XHR
+                        if (method === 'GET') {
+                            XHR.open(method, `${url}?${parseData(data)}`);
+                            // OPEND
+                            // console.log('XHR open 后 OPEND：', XHR.readyState === XHR.OPENED);
+                            XHR.send();
+                        } else if (method === 'POST') {
+                            XHR.open(method, `${url}`);
+                            XHR.setRequestHeader('Content-type', 'application/json');
+                            XHR.send(parseData(data, 'POST'));
+                        }
+
+                        XHR.addEventListener('readystatechange', () => {
+                            const { readyState } = XHR;
+                            if (readyState === 2 && readyState === XHR.HEADERS_RECEIVED) {
+                                const headersText = XHR.getAllResponseHeaders();
+                                this.headersText = headersText;
+                                this.total = XHR.getResponseHeader('Content-length');
+                                // console.log('已经接受所有响应头：', headersText);
+                            } else if (readyState === 3 && readyState === XHR.LOADING) {
+                                const { responseText } = XHR;
+                                this.responseText = responseText;
+                                // console.log('已经接受部分数据：', responseText);
+                            } else if (readyState === 4 && readyState === XHR.DONE) {
+                                const { responseText } = XHR;
+                                this.responseText = responseText;
+                                // console.log('接受完成所有响应数据：', responseText)
+                            } else {
+                                console.log('不可能发生：', readyState);
+                            }
+                        });
+
+                        XHR.addEventListener('progress', (event) => {
+                            console.log('触发了 progress 事件');
+                            this.loaded = event.loaded;
+                        });
+                    },
+                },
+            });
+        </script>
+    </body>
 </html>

@@ -1,5 +1,5 @@
-const createStore = (reducer) => {
-    let state;
+const createStore = (reducer, preloadedState) => {
+    let state = preloadedState;
     const listeners = [];
 
     const subscribe = (listener) => {
@@ -21,7 +21,10 @@ const createStore = (reducer) => {
         state = reducer(state, action);
         listeners.forEach((listener) => listener());
     };
-    dispatch({});
+
+    if (preloadedState === undefined) {
+        dispatch({});
+    }
 
     return {
         getState,

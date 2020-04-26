@@ -3,8 +3,7 @@
  * path (Array|string): 要获取属性的路径。
  * [defaultValue] (*): 如果解析值是 undefined ，这值会被返回。
  */
-
-const get = (object, path, defaultValue) => {
+function get(object, path, defaultValue) {
     if (!Array.isArray(path) && typeof path !== 'string')
         throw new TypeError(`path must be array or string, but you pass the type ${typeof path}`);
 
@@ -13,7 +12,7 @@ const get = (object, path, defaultValue) => {
 
     let propArray = path;
     if (typeof path === 'string') {
-        // 如果 path 是字符串需要解析成特性数组，这里只是简单的替换 [expression] 成 .expression 后根据 . 拆分成特性数组
+        // 如果 path 是字符串需要解析成 properties 数组，这里只是简单的替换 [expression] 成 .expression 后再根据 . 拆分成特性数组
         // 其实 lodash 源码比这复杂的多
         path = path.replace(/\[(\w*)\]/g, '.$1');
         path = path.startsWith('.') ? path.slice(1) : path;
@@ -30,7 +29,7 @@ const get = (object, path, defaultValue) => {
         object = object[property];
     }
 
-    return index && index === length && object !== undefined ? object : defaultValue;
-};
+    return index === length ? object : defaultValue;
+}
 
 module.exports = get;

@@ -81,5 +81,3 @@
 20. [curry](https://github.com/tjx666/deep-in-fe/tree/master/src/curry) ✔
 
 21. [scheduler](https://github.com/tjx666/deep-in-fe/tree/master/src/scheduler) ✔
-
-## CSS

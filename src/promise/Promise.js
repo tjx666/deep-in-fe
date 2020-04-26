@@ -1,5 +1,5 @@
-/* eslint-disable promise/catch-or-return */
 const { types } = require('util');
+
 const isObject = require('../is/isObject');
 
 function isThenable(value) {
@@ -7,7 +7,7 @@ function isThenable(value) {
 }
 
 class Promise {
-    static _states = Object.freeze({
+    static states = Object.freeze({
         PENDING: Symbol('pending'), // 初始状态
         FULFILLED: Symbol('fulfilled'), // 成功执行后的状态
         REJECTED: Symbol('rejected'), // 执行出错的状态
@@ -20,12 +20,12 @@ class Promise {
     constructor(executor) {
         // 默认值
         // promise 状态
-        this._state = Promise._states.PENDING;
+        this.state = Promise.states.PENDING;
         // resolve 的值
-        this._value = null;
+        this.value = null;
         // reject 的值
-        this._reason = null;
-        this._caught = false;
+        this.reason = null;
+        this.caught = false;
 
         // executer 中 resolve 后执行的回调
         // 我们必须用数组存而不是一个回调函数，是因为同一个 promise 可能被多次调用
@@ -52,14 +52,12 @@ class Promise {
         this.onRejectedMicroTasks.push((reason) => {
             if (reason === this) {
                 console.warn('Chaining cycle detected for promise #<Promise>');
-                // eslint-disable-next-line no-useless-return
                 return;
             }
 
             // 目前 node v12.16.1 和 chrome  80.0.3987.122 在没有 catch Promise 错误的情况下
             // 只会输出警告，不会影响后续代码的执行
-            // 为了不影响我们 debug 这里先注释掉
-            if (!this._caught) {
+            if (!this.caught) {
                 console.error(`UnhandledPromiseRejectionWarning: ${reason}`);
                 console.error(
                     `UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch().`,
@@ -74,9 +72,9 @@ class Promise {
 
         const resolve = (value) => {
             // 有可能用户在 executor 中多次调用 resolve 或者 reject
-            if (this._state === Promise._states.PENDING) {
-                this._state = Promise._states.FULFILLED;
-                this._value = value;
+            if (this.state === Promise.states.PENDING) {
+                this.state = Promise.states.FULFILLED;
+                this.value = value;
 
                 // 使用 setTimeout 模拟 micro task
                 this.onFulfilledMicroTasks.forEach((microTask) =>
@@ -86,9 +84,9 @@ class Promise {
         };
 
         const reject = (reason) => {
-            if (this._state === Promise._states.PENDING) {
-                this._state = Promise._states.REJECTED;
-                this._reason = reason;
+            if (this.state === Promise.states.PENDING) {
+                this.state = Promise.states.REJECTED;
+                this.reason = reason;
                 this.onRejectedMicroTasks.forEach((microTask) =>
                     setTimeout(() => microTask(reason)),
                 );
@@ -96,8 +94,7 @@ class Promise {
         };
 
         try {
-            // 因为在 Promise 构造器中就直接同步直接了 executor
-            // 所以 executor 中的代码时同步代码
+            // 因为在 Promise 构造器中就直接同步执行了 executor，所以 executor 中的代码是同步代码
             executor(resolve, reject);
         } catch (error) {
             // 出错直接 reject
@@ -113,7 +110,7 @@ class Promise {
         // 处理回调不是函数的情况，要确保后续调用 then 和 catch 能继续拿到 value 和 error
         if (typeof onfulfilled !== 'function') onfulfilled = (value) => value;
         if (typeof onrejected === 'function') {
-            this._caught = true;
+            this.caught = true;
         } else {
             onrejected = (error) => {
                 throw error;
@@ -127,7 +124,7 @@ class Promise {
         // 并且 Promise A+ 规范规定: Promise 状态一旦发生改变不能发生变化
         // 所以我们采用返回新实例的方式来实现链式调用
         const promise2 = new Promise((resolve, reject) => {
-            if (this._state === Promise._states.PENDING) {
+            if (this.state === Promise.states.PENDING) {
                 // pending 就 push 回调
                 this.onFulfilledMicroTasks.push((value) => {
                     try {
@@ -146,20 +143,20 @@ class Promise {
                         reject(error);
                     }
                 });
-            } else if (this._state === Promise._states.FULFILLED) {
+            } else if (this.state === Promise.states.FULFILLED) {
                 // 已经改变状态就直接执行回调
                 setTimeout(() => {
                     try {
-                        const x = onfulfilled(this._value);
+                        const x = onfulfilled(this.value);
                         Promise.resolvePromise(this, promise2, x, resolve, reject);
                     } catch (error) {
                         reject(error);
                     }
                 }, 0);
-            } else if (this._state === Promise._states.REJECTED) {
+            } else if (this.state === Promise.states.REJECTED) {
                 setTimeout(() => {
                     try {
-                        const x = onrejected(this._reason);
+                        const x = onrejected(this.reason);
                         Promise.resolvePromise(this, promise2, x, resolve, reject);
                     } catch (error) {
                         reject(error);
@@ -179,7 +176,6 @@ class Promise {
      */
     static resolvePromise(self, promise2, x, resolve, reject) {
         if (self === x || promise2 === x) {
-            // console.warn('Chaining cycle detected for promise #<Promise></Promise>')
             reject(new TypeError('Chaining cycle detected for promise #<Promise></Promise>'));
             return;
         }
@@ -265,17 +261,22 @@ class Promise {
         return new Promise((resolve, reject) => reject(reason));
     }
 
+    /**
+     * 返回一个新的 Promise，当所有 Promise 都 resolve 才 resolve
+     * 只要有一个 promise reject 就 reject，reason 为这个 rejected Promise 的 reason
+     * 当 promise 数组是空数组时，返回 resolved 的 Promise 而不是 pending 的数组
+     * !: 需要注意的是返回的结果数组中的顺序需要和 promise 数组的顺序一致
+     * @param {Promise[]} promises
+     */
     static all(promises) {
         const resultValues = [];
-        promises = Array.from(promises);
-
         if (promises.length === 0) {
             return Promise.resolve(resultValues);
         }
 
         let completedCount = 0;
         return new Promise((resolve, reject) => {
-            promises.forEach((promise, index) => {
+            Array.from(promises).forEach((promise, index) => {
                 if (!isThenable(promise)) {
                     promise = Promise.resolve(promise);
                 }
@@ -288,6 +289,36 @@ class Promise {
                         }
                     },
                     (error) => reject(error),
+                );
+            });
+        });
+    }
+
+    /**
+     * 面头条商业广告的时候考过
+     * @param {Promise[]} promises
+     */
+    static allRejected(promises) {
+        const resultValues = [];
+        if (promises.length === 0) {
+            return Promise.reject(resultValues);
+        }
+
+        let rejectedCount = 0;
+        return new Promise((resolve, reject) => {
+            Array.from(promises).forEach((promise, index) => {
+                if (!isThenable(promise)) {
+                    promise = Promise.resolve(promise);
+                }
+                promise.then(
+                    (value) => reject(value),
+                    (reason) => {
+                        rejectedCount++;
+                        resultValues[index] === reason;
+                        if (rejectedCount === promises.length) {
+                            resolve(resultValues);
+                        }
+                    },
                 );
             });
         });
@@ -311,19 +342,26 @@ class Promise {
     // reject 了就返回 { status: 'rejected', reason }
     static allSettled(promises) {
         promises = Array.from(promises);
+        let completeCount = 0;
         return new Promise((resolve, reject) => {
             const results = [];
-            promises.forEach((promise) => {
+            promises.forEach((promise, index) => {
                 if (!isThenable(promise)) {
                     promise = Promise.resolve(promise);
                 }
                 promise
                     .then(
-                        (value) => results.push({ status: 'fulfilled', value }),
-                        (reason) => results.push({ status: 'rejected', reason }),
+                        (value) => {
+                            completeCount++;
+                            results[index] = { status: 'fulfilled', value };
+                        },
+                        (reason) => {
+                            completeCount++;
+                            results[index] = { status: 'rejected', reason };
+                        },
                     )
                     .finally(() => {
-                        if (results.length === promises.length) resolve(results);
+                        if (completeCount === promises.length) resolve(results);
                     });
             });
         });

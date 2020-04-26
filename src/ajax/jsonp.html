@@ -1,180 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <style>
-        table {
-            width: 600px;
-            margin: 0 auto;
-            border-collapse: collapse;
-            border: 1px solid black;
-        }
-
-        td,
-        th {
-            border: 1px solid black;
-        }
-
-        td {
-            text-align: center;
-        }
-
-        .title {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .load {
-            width: 40px;
-            height: 40px;
-            margin-left: 10px;
-            border-radius: 50%;
-            background-color: lightcoral;
-            line-height: 40px;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .load:hover {
-            background-color: coral;
-        }
-
-        .load:active {
-            background-color: yellow;
-        }
-
-        .status {
-            margin-left: 20px;
-            color: gray;
-        }
-    </style>
-    <title>Document</title>
-</head>
-
-<body>
-    <div id="app">
-        <div class="title">
-            <span>some companies work time </span>
-            <div class="load" @click="handleLoad">加载</div>
-            <span class="status">{{status}}</span>
-        </div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>company</th>
-                    <th>start</th>
-                    <th>end</th>
-                    <th>days</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="workTimeItem of workTimeList">
-                    <td>{{workTimeItem.company}}</td>
-                    <td>{{workTimeItem.start}}</td>
-                    <td>{{workTimeItem.end}}</td>
-                    <td>{{workTimeItem.days}}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <script>
-        const jsonp = ({
-            url,
-            jsonpCallbackName,
-            params = {},
-            timeout = 10 * 1000,
-            onSuccess,
-            onError,
-            onCompleted
-        } = {}) => {
-            if (!jsonpCallbackName) throw new Error('You must pass the jsonpCallbackName argument!');
-
-            // 处理参数
-            params.callback = jsonpCallbackName;
-            const queryString = Object.entries(params).reduce((previous, [key, value]) => `${previous}${encodeURIComponent(key)}=${encodeURIComponent(value)}`, '?');
-
-            const originalCallback = window[jsonpCallbackName];
-            if (typeof originalCallback !== 'function') throw new Error(`${jsonpCallbackName} must be function!`)
-            const scriptElement = document.createElement('script');
-            scriptElement.setAttribute('src', `${url}${queryString}`);
-            let responseParams;
-
-            window[jsonpCallbackName] = (...params) => {
-                responseParams = params;
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <style>
+            table {
+                width: 600px;
+                margin: 0 auto;
+                border: 1px solid black;
+                border-collapse: collapse;
             }
 
-            scriptElement.addEventListener('load', () => {
-                onCompleted();
-                if (!responseParams && onError) {
-                    scriptElement.dispatchEvent(new CustomEvent('error', {
-                        bubbles: false,
-                        detail: 'no response data'
-                    }))
-                } else {
-                    onSuccess(...responseParams);
-                    originalCallback(...responseParams);
+            td,
+            th {
+                border: 1px solid black;
+            }
+
+            td {
+                text-align: center;
+            }
+
+            .title {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 20px;
+            }
+
+            .load {
+                width: 40px;
+                height: 40px;
+                margin-left: 10px;
+                line-height: 40px;
+                text-align: center;
+                background-color: lightcoral;
+                border-radius: 50%;
+                cursor: pointer;
+            }
+
+            .load:hover {
+                background-color: coral;
+            }
+
+            .load:active {
+                background-color: yellow;
+            }
+
+            .status {
+                margin-left: 20px;
+                color: gray;
+            }
+        </style>
+        <title>Document</title>
+    </head>
+
+    <body>
+        <div id="app">
+            <div class="title">
+                <span>some companies work time </span>
+                <div class="load" @click="handleLoad">加载</div>
+                <span class="status">{{status}}</span>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>company</th>
+                        <th>start</th>
+                        <th>end</th>
+                        <th>days</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="workTimeItem of workTimeList">
+                        <td>{{workTimeItem.company}}</td>
+                        <td>{{workTimeItem.start}}</td>
+                        <td>{{workTimeItem.end}}</td>
+                        <td>{{workTimeItem.days}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <script>
+            const jsonp = ({
+                url,
+                jsonpCallbackName,
+                params = {},
+                timeout = 10 * 1000,
+                onSuccess,
+                onError,
+                onCompleted,
+            } = {}) => {
+                if (!jsonpCallbackName)
+                    throw new Error('You must pass the jsonpCallbackName argument!');
+
+                // 处理参数
+                params.callback = jsonpCallbackName;
+                const queryString = Object.entries(params).reduce(
+                    (previous, [key, value]) =>
+                        `${previous}${encodeURIComponent(key)}=${encodeURIComponent(value)}`,
+                    '?',
+                );
+
+                const originalCallback = window[jsonpCallbackName];
+                if (typeof originalCallback !== 'function')
+                    throw new Error(`${jsonpCallbackName} must be function!`);
+                const scriptElement = document.createElement('script');
+                scriptElement.setAttribute('src', `${url}${queryString}`);
+                let responseParams;
+
+                window[jsonpCallbackName] = (...params) => {
+                    responseParams = params;
+                };
+
+                scriptElement.addEventListener('load', () => {
+                    onCompleted();
+                    if (!responseParams && onError) {
+                        scriptElement.dispatchEvent(
+                            new CustomEvent('error', {
+                                bubbles: false,
+                                detail: 'no response data',
+                            }),
+                        );
+                    } else {
+                        onSuccess(...responseParams);
+                        originalCallback(...responseParams);
+                        document.head.removeChild(scriptElement);
+                    }
+                });
+
+                scriptElement.addEventListener('error', (event) => {
+                    console.error(event);
+                    onError && onError(event);
                     document.head.removeChild(scriptElement);
-                }
+                });
+
+                setTimeout(() => {
+                    scriptElement.dispatchEvent(
+                        new CustomEvent('error', {
+                            bubbles: false,
+                            detail: 'timeout',
+                        }),
+                    );
+                }, timeout);
+
+                document.head.appendChild(scriptElement);
+            };
+
+            const vm = new Vue({
+                el: '#app',
+                data: {
+                    workTimeList: [
+                        {
+                            company: 'bytedance',
+                            start: '10:30',
+                            end: '9:00',
+                            days: 5.5,
+                        },
+                    ],
+                    status: '未加载',
+                },
+                methods: {
+                    handleLoad() {
+                        this.status = 'loading...';
+                        jsonp({
+                            url: 'http://localhost:1027/jsonp',
+                            jsonpCallbackName: 'get_work_time_list',
+                            onSuccess: (response) => {
+                                console.log(
+                                    'success! the data:',
+                                    JSON.stringify(response, null, 2),
+                                );
+                                this.status = 'loaded';
+                            },
+                            onCompleted() {
+                                console.log('completed!');
+                            },
+                        });
+                    },
+                },
             });
 
-            scriptElement.addEventListener('error', (event) => {
-                console.error(event)
-                onError && onError(event);
-                document.head.removeChild(scriptElement);
-            })
-
-            setTimeout(() => {
-                scriptElement.dispatchEvent(new CustomEvent('error', {
-                    bubbles: false,
-                    detail: 'timeout'
-                }))
-            }, timeout);
-
-            document.head.appendChild(scriptElement);
-        };
-
-        const vm = new Vue({
-            el: '#app',
-            data: {
-                workTimeList: [
-                    {
-                        company: 'bytedance',
-                        start: '10:30',
-                        end: '9:00',
-                        days: 5.5
-                    }
-                ],
-                status: '未加载'
-            },
-            methods: {
-                handleLoad() {
-                    this.status = 'loading...';
-                    jsonp({
-                        url: 'http://localhost:1027/jsonp',
-                        jsonpCallbackName: 'get_work_time_list',
-                        onSuccess: (response) => {
-                            console.log('success! the data:', JSON.stringify(response, null, 2));
-                            this.status = 'loaded'
-                        },
-                        onCompleted() {
-                            console.log('completed!')
-                        }
-                    });
-                }
-            },
-        })
-
-        window.get_work_time_list = (workTimeList) => {
-            vm.workTimeList = workTimeList;
-        }
-    </script>
-</body>
-
+            window.get_work_time_list = (workTimeList) => {
+                vm.workTimeList = workTimeList;
+            };
+        </script>
+    </body>
 </html>
