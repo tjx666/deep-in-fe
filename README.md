@@ -62,7 +62,10 @@
 
 14. [模拟私有属性](https://github.com/tjx666/deep-in-fe/tree/master/src/privateProperty) ✔
 
-15. [redux](https://github.com/tjx666/deep-in-fe/tree/master/src/redux) ✔
+15. [redux](https://github.com/tjx666/deep-in-fe/tree/master/src/redux)
+
+    - createStore ✔
+    - compose ✔
 
 16. [深度克隆](https://github.com/tjx666/deep-in-fe/tree/master/src/cloneDeep) ✔
 
@@ -80,4 +83,9 @@
 
 20. [curry](https://github.com/tjx666/deep-in-fe/tree/master/src/curry) ✔
 
-21. [scheduler](https://github.com/tjx666/deep-in-fe/tree/master/src/scheduler) ✔
+21. [并发限制调度器 scheduler](https://github.com/tjx666/deep-in-fe/tree/master/src/scheduler) ✔
+
+22. [一些函数工具](https://github.com/tjx666/deep-in-fe/tree/master/src/scheduler)
+
+    - once ✔
+    - memorize ✔
