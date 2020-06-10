@@ -6,7 +6,7 @@
     "main": "index.js",
     "type": "commonjs",
     "engines": {
-        "node": "12.16.2"
+        "node": "12.18.0"
     },
     "author": "YuTengjing",
     "license": "MIT",
@@ -33,16 +33,16 @@
         ]
     },
     "devDependencies": {
-        "@babel/core": "^7.9.0",
+        "@babel/core": "^7.9.6",
         "@storybook/addon-actions": "^5.3.18",
         "@storybook/addon-links": "^5.3.18",
         "@storybook/addons": "^5.3.18",
         "@storybook/react": "^5.3.18",
-        "audit-ci": "^2.5.1",
+        "audit-ci": "^3.0.0",
         "babel-eslint": "^10.1.0",
         "babel-loader": "^8.1.0",
         "codecov": "^3.6.5",
-        "eslint": "^6.8.0",
+        "eslint": "^7.0.0",
         "eslint-config-airbnb-base": "^14.1.0",
         "eslint-config-prettier": "^6.11.0",
         "eslint-plugin-eslint-comments": "^3.1.2",
@@ -52,10 +52,10 @@
         "eslint-plugin-promise": "^4.2.1",
         "husky": "^4.2.5",
         "intelli-espower-loader": "^1.0.1",
-        "lint-staged": "^10.1.7",
+        "lint-staged": "^10.2.2",
         "mocha": "^7.1.2",
-        "mochawesome": "^6.1.0",
-        "node-sass": "^4.14.0",
+        "mochawesome": "^6.1.1",
+        "node-sass": "^4.14.1",
         "nyc": "^15.0.1",
         "power-assert": "^1.6.1",
         "prettier": "^2.0.5",
@@ -68,7 +68,7 @@
         "stylelint-config-standard": "^20.0.0",
         "stylelint-declaration-block-no-ignored-properties": "^2.3.0",
         "stylelint-order": "^4.0.0",
-        "stylelint-scss": "^3.17.1",
+        "stylelint-scss": "^3.17.2",
         "webpack-merge": "^4.2.2"
     },
     "dependencies": {}

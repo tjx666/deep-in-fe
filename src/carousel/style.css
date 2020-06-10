@@ -1,0 +1,47 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.carousel {
+    position: relative;
+    width: 800px;
+    height: 480px;
+    margin: 100px auto;
+    overflow: hidden;
+}
+
+.slider {
+    position: relative;
+    left: 0;
+    width: 4800px;
+    height: 100%;
+}
+
+.slick {
+    display: block;
+    float: left;
+    width: 800px;
+    height: 100%;
+}
+
+.arrow {
+    position: absolute;
+    top: 50%;
+    color: black;
+    font-weight: bold;
+    font-size: 64px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    opacity: 0.2;
+    transition: opacity 0.2s ease-in;
+}
+
+.arrow:hover {
+    opacity: 0.8;
+}
+
+.arrow-right {
+    right: 0;
+}

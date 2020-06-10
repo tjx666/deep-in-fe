@@ -1,3 +1,4 @@
 test/utils/requireDir
 src/extends/es6ClassExtends/babelOutput.js
 src/privateProperty/privateField.js
+src/co/babel

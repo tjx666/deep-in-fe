@@ -343,7 +343,7 @@ class Promise {
     static allSettled(promises) {
         promises = Array.from(promises);
         let completeCount = 0;
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             const results = [];
             promises.forEach((promise, index) => {
                 if (!isThenable(promise)) {
