@@ -283,7 +283,7 @@ class Promise {
                 promise.then(
                     (value) => {
                         completedCount++;
-                        resultValues[index] === value;
+                        resultValues[index] = value;
                         if (completedCount === promises.length) {
                             resolve(resultValues);
                         }
