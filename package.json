@@ -41,7 +41,7 @@
         "audit-ci": "^3.0.0",
         "babel-eslint": "^10.1.0",
         "babel-loader": "^8.1.0",
-        "codecov": "^3.6.5",
+        "codecov": "^3.8.3",
         "eslint": "^7.0.0",
         "eslint-config-airbnb-base": "^14.1.0",
         "eslint-config-prettier": "^6.11.0",
